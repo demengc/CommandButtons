@@ -1,0 +1,57 @@
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#   _____                                          _ ____        _   _                    #
+#  / ____|                                        | |  _ \      | | | |                   #
+# | |     ___  _ __ ___  _ __ ___   __ _ _ __   __| | |_) |_   _| |_| |_ ___  _ __  ___   #
+# | |    / _ \| '_ ` _ \| '_ ` _ \ / _` | '_ \ / _` |  _ <| | | | __| __/ _ \| '_ \/ __|  #
+# | |___| (_) | | | | | | | | | | | (_| | | | | (_| | |_) | |_| | |_| || (_) | | | \__ \  #
+#  \_____\___/|_| |_| |_|_| |_| |_|\__,_|_| |_|\__,_|____/ \__,_|\__|\__\___/|_| |_|___/  #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# |
+# LANGUAGE CONFIGURATION FILE FOR COMMANDBUTTONS BY DEMENG7215 #
+# This is where you can customize the messages for CommandButtons. #
+# Everything in this file should be clearly explained. For questions, please use the support options.
+# Thank you for using CommandButtons!
+
+# Do not change this line!
+config-version: 1
+
+# The prefix that will be show in front of every message CommandButtons sends.
+prefix: "&8[&4CommandButtons&8] &r"
+
+# The messages that will be shown when a player or the console requests for the help menu.
+help-menu:
+  - "&c&lList of Commands for CommandButtons:&r"
+  - "&6/cb &8- &7The main command for CommandButtons."
+  - "&6/cbinfo &8- &7Displays plugin information."
+  - "&6/cbhelp &8- &7Displays a list of commands."
+  - "&6/cbreload &8- &7Reloads all configuration files."
+  - "&6/cbcreate <name> &8- &7Creates a new Command Button."
+  - "&6/cbgui [name] &8- &7Open CommandButtons main GUI or open a specific button GUI."
+  - "&6/cblist &8- &7List of Command Buttons on the server."
+
+# This message will be sent when configuration files are reloaded.
+reloaded: "&6Configuration files and data have been successfully reloaded."
+
+# The message that will be sent when the console tries to execute a player-only command.
+console: "&6You must be a player to execute that command."
+
+# This message will be sent if the command executor uses the command incorrectly.
+invalid-args: "&6Invalid arguments. Please see the help menu for usage."
+
+# The message that will be sent when the player tries to modify a non-existing Command Button.
+invalid-button-name: "&6That's not a valid Command Button. Execute &7/cblist &6for a list of Command Buttons."
+
+# This message will be sent if the command executor does not have permission to execute that command.
+no-perms: "&6You do not have permission to do that."
+
+# The message that will be sent if a player tries to name a Command Button an existing name.
+already-exists: "&6A Command Button under that name already exists."
+
+# This message will be sent if a player tries to make an unsupported block a Command Button.
+not-button: "&6You cannot make the item you are looking at a Command Button. Try something else!"
+
+# The message that will be sent if a player tries to use a Command Button while they are on cooldown.
+cooldown-wait: "&6You must wait &7%seconds% &6seconds before using that again!"
+
+# This message will be sent if a player tries to use a Command Button without sufficient balance/money.
+insufficient-funds: "&6You do not have enough money to do that right now, this costs &7%cost%&6."

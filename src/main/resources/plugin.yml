@@ -1,0 +1,8 @@
+name: CommandButtons
+version: ${project.version}
+main: com.demeng7215.commandbuttons.CommandButtons
+softdepend: [Vault]
+author: Demeng7215
+description: Execute commands when players click on specific buttons!
+website: https://demeng7215.com/
+api-version: 1.13
