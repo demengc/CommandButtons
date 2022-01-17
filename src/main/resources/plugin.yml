@@ -1,8 +1,8 @@
 name: CommandButtons
-version: ${project.version}
-main: com.demeng7215.commandbuttons.CommandButtons
-softdepend: [Vault]
-author: Demeng7215
-description: Execute commands when players click on specific buttons!
-website: https://demeng7215.com/
+version: '${project.version}'
+main: dev.demeng.commandbuttons.CommandButtons
 api-version: 1.13
+authors: [ Demeng ]
+description: Execute commands on block interaction.
+website: https://demeng.dev/
+softdepend: [ Vault ]
