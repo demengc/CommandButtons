@@ -1,0 +1,30 @@
+# -----------------------------------------------------------------------------
+# ___________________
+# \_   ___ \______   \
+# /    \  \/|    |  _/
+# \     \___|    |   \
+#  \______  |______  /
+#         \/       \/
+# |
+# MESSAGES.YML - This is where you configure the locale for CommandButtons.
+# Support: https://demeng.dev/discord
+# -----------------------------------------------------------------------------
+
+config-version: 2
+
+# The prefix that will be displayed in front of most messages.
+prefix: "&8[&4CB&8] &r"
+
+# If the command is players-only but was executed by the console.
+not-player: "&6You must be a player to execute that command."
+
+# If the command executor does not have sufficient permission.
+# Use %permission% for the required permission.
+insufficient-permission: "&6You must have the &e%permission% &6permission to do that!"
+
+# If the command sender does not provide enough/valid arguments.
+# Use %usage% for the correct usage.
+incorrect-usage: "&6Incorrect usage! Did you mean: &e%usage%"
+
+# When configuration files have been successfully reloaded.
+reloaded: "&6Successfully reloaded configuration files."

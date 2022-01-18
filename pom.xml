@@ -19,6 +19,7 @@
   <url>https://demeng.dev/</url>
 
   <build>
+    <finalName>${project.name}-${project.version}</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -43,8 +44,14 @@
               <createDependencyReducedPom>false</createDependencyReducedPom>
               <minimizeJar>true</minimizeJar>
               <relocations>
-                <relocation>dev.demeng.pluginbase</relocation>
-                <shadedRelocation>dev.demeng.commandbuttons.shaded.pluginbase</shadedRelocation>
+                <relocation>
+                  <pattern>dev.demeng.pluginbase</pattern>
+                  <shadedPattern>dev.demeng.commandbuttons.shaded.pluginbase</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>org.bstats</pattern>
+                  <shadedPattern>dev.demeng.commandbuttons.shaded.bstats</shadedPattern>
+                </relocation>
               </relocations>
             </configuration>
           </execution>
@@ -82,6 +89,24 @@
       <artifactId>pluginbase-core</artifactId>
       <version>d843a754a7</version>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.MilkBowl</groupId>
+      <artifactId>VaultAPI</artifactId>
+      <version>1.7</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.bstats</groupId>
+      <artifactId>bstats-bukkit</artifactId>
+      <version>2.2.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.22</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>
