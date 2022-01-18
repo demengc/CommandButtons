@@ -26,5 +26,12 @@ insufficient-permission: "&6You must have the &e%permission% &6permission to do 
 # Use %usage% for the correct usage.
 incorrect-usage: "&6Incorrect usage! Did you mean: &e%usage%"
 
+# When the list of commands are requested.
+help:
+  - "&c&lList of Commands for CommandButtons:&r"
+  - "&6/cb &8- &6The main command for CommandButtons."
+  - "&6/cb help &8- &6Displays the list of commands."
+  - "&6/cb reload &8- &6Reloads configuration files."
+
 # When configuration files have been successfully reloaded.
 reloaded: "&6Successfully reloaded configuration files."

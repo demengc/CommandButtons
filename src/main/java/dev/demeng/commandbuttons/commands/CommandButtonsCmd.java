@@ -58,6 +58,14 @@ public class CommandButtonsCmd extends CommandBase {
         "&6Link: &ehttps://spigotmc.org/resources/60991/");
   }
 
+  @SubCommand("help")
+  @Description("Displays the list of commands.")
+  public void runHelp(CommandSender sender) {
+    for (String line : i.getMessages().getStringList("help")) {
+      ChatUtils.coloredTell(sender, line);
+    }
+  }
+
   @SubCommand("reload")
   @Description("Reloads configuration files.")
   @Aliases("rl")

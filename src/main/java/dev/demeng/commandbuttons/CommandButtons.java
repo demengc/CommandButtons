@@ -74,7 +74,7 @@ public final class CommandButtons extends BasePlugin {
         + "&4/    \\  \\/|    |  _/\n"
         + "&c\\     \\___|    |   \\\n"
         + "&c \\______  |______  /\n"
-        + "&c        \\/       \\/ \n\n");
+        + "&c        \\/       \\/ \n");
 
     getLogger().info("Loading configuration files...");
     if (!loadFiles()) {
