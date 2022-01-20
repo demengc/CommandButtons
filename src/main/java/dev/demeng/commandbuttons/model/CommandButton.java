@@ -114,26 +114,30 @@ public class CommandButton {
       return false;
     }
 
-    final long remainingCooldown = getRemainingCooldown(p);
+    if (!p.hasPermission("commandbuttons.bypass.cooldown")) {
+      final long remainingCooldown = getRemainingCooldown(p);
 
-    if (remainingCooldown > 0) {
-      ChatUtils.tell(p, Objects.requireNonNull(messagesConfig.getString("cooldown-active"))
-          .replace("%remaining%",
-              DurationFormatter.LONG.format(Duration.ofMillis(remainingCooldown))));
-      return false;
-    }
-
-    final Economy econ = CommandButtons.getInstance().getEconomyHook();
-
-    if (econ != null) {
-
-      if (!econ.has(p, cost)) {
-        ChatUtils.tell(p, Objects.requireNonNull(messagesConfig.getString("insufficient-funds"))
-            .replace("%cost%", String.format("%.2f", cost)));
+      if (remainingCooldown > 0) {
+        ChatUtils.tell(p, Objects.requireNonNull(messagesConfig.getString("cooldown-active"))
+            .replace("%remaining%",
+                DurationFormatter.LONG.format(Duration.ofMillis(remainingCooldown))));
         return false;
       }
+    }
 
-      econ.withdrawPlayer(p, cost);
+    if (!p.hasPermission("commandbuttons.bypass.cost")) {
+      final Economy econ = CommandButtons.getInstance().getEconomyHook();
+
+      if (econ != null) {
+
+        if (!econ.has(p, cost)) {
+          ChatUtils.tell(p, Objects.requireNonNull(messagesConfig.getString("insufficient-funds"))
+              .replace("%cost%", String.format("%.2f", cost)));
+          return false;
+        }
+
+        econ.withdrawPlayer(p, cost);
+      }
     }
 
     lastUsed.put(perPlayerCooldown ? p : null, System.currentTimeMillis());
