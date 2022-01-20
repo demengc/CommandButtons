@@ -57,7 +57,7 @@ import org.bukkit.entity.Player;
 public class CommandButton {
 
   // The prefix that all commands executed by the console should have.
-  private static final String CONSOLE_PREFIX = "{CONSOLE}";
+  public static final String CONSOLE_PREFIX = "{CONSOLE}";
 
   private final String id;
   private List<Location> locations;

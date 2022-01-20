@@ -29,6 +29,7 @@ import dev.demeng.commandbuttons.model.CommandButton;
 import dev.demeng.commandbuttons.util.LocationSerializer;
 import dev.demeng.pluginbase.Common;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -128,5 +129,33 @@ public class ButtonsManager {
     }
 
     buttons.put(button.getId(), button);
+  }
+
+  /**
+   * Deletes and unregisters the button.
+   *
+   * @param id The ID of the button to delete and unregister
+   */
+  public void deleteButton(String id) {
+
+    i.getData().set("buttons." + id, null);
+
+    try {
+      i.getDataFile().save();
+    } catch (IOException ex) {
+      Common.error(ex, "Failed to save data.", false);
+      return;
+    }
+
+    buttons.remove(id);
+  }
+
+  /**
+   * Gets all registered command buttons.
+   *
+   * @return The collection of all command buttons
+   */
+  public Collection<CommandButton> getButtons() {
+    return buttons.values();
   }
 }

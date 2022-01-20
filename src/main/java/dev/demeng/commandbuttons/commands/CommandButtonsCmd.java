@@ -25,7 +25,10 @@
 package dev.demeng.commandbuttons.commands;
 
 import dev.demeng.commandbuttons.CommandButtons;
+import dev.demeng.commandbuttons.menus.ButtonMenu;
+import dev.demeng.commandbuttons.menus.ButtonsListMenu;
 import dev.demeng.commandbuttons.model.CommandButton;
+import dev.demeng.commandbuttons.util.Utils;
 import dev.demeng.pluginbase.Common;
 import dev.demeng.pluginbase.chat.ChatUtils;
 import dev.demeng.pluginbase.command.CommandBase;
@@ -33,6 +36,7 @@ import dev.demeng.pluginbase.command.annotations.Aliases;
 import dev.demeng.pluginbase.command.annotations.Command;
 import dev.demeng.pluginbase.command.annotations.Default;
 import dev.demeng.pluginbase.command.annotations.Description;
+import dev.demeng.pluginbase.command.annotations.Optional;
 import dev.demeng.pluginbase.command.annotations.Permission;
 import dev.demeng.pluginbase.command.annotations.SubCommand;
 import dev.demeng.pluginbase.command.annotations.Usage;
@@ -40,7 +44,6 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -101,8 +104,7 @@ public class CommandButtonsCmd extends CommandBase {
 
     final Block targetBlock = p.getTargetBlock(null, 5);
 
-    if (targetBlock.getType() == Material.AIR
-        || (Common.isServerVersionAtLeast(13) && targetBlock.getType().isAir())) {
+    if (Utils.isAir(targetBlock)) {
       ChatUtils.tell(p, i.getMessages().getString("no-target-block"));
       return;
     }
@@ -132,5 +134,27 @@ public class CommandButtonsCmd extends CommandBase {
     i.getButtonsManager().saveButton(button);
     ChatUtils.tell(p, Objects.requireNonNull(i.getMessages().getString("created"))
         .replace("%id%", id));
+  }
+
+  @SubCommand("editor")
+  @Description("Opens the GUI editor.")
+  @Aliases({"gui", "edit"})
+  @Usage("/cb editor [id]")
+  @Permission("commandbuttons.editor")
+  public void runEditor(Player p, @Optional String id) {
+
+    if (id == null) {
+      new ButtonsListMenu(i, p).open(p);
+      return;
+    }
+
+    final CommandButton button = i.getButtonsManager().getButton(id);
+
+    if (button == null) {
+      tellIncorrectUsage("/cb editor <id>");
+      return;
+    }
+
+    new ButtonMenu(i, p, button).open(p);
   }
 }
