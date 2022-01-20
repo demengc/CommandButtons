@@ -32,6 +32,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+/**
+ * Serializes and deserializes block locations to/from strings.
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class LocationSerializer {
 
