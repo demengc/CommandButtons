@@ -25,6 +25,7 @@
 package dev.demeng.commandbuttons.commands;
 
 import dev.demeng.commandbuttons.CommandButtons;
+import dev.demeng.commandbuttons.model.CommandButton;
 import dev.demeng.pluginbase.Common;
 import dev.demeng.pluginbase.chat.ChatUtils;
 import dev.demeng.pluginbase.command.CommandBase;
@@ -34,10 +35,16 @@ import dev.demeng.pluginbase.command.annotations.Default;
 import dev.demeng.pluginbase.command.annotations.Description;
 import dev.demeng.pluginbase.command.annotations.Permission;
 import dev.demeng.pluginbase.command.annotations.SubCommand;
+import dev.demeng.pluginbase.command.annotations.Usage;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.entity.Player;
 
 /**
  * The main command of CommandButtons.
@@ -81,7 +88,49 @@ public class CommandButtonsCmd extends CommandBase {
     }
 
     i.updateBaseSettings();
+    i.getButtonsManager().loadAllButtons();
 
     ChatUtils.tell(sender, i.getMessages().getString("reloaded"));
+  }
+
+  @SubCommand("create")
+  @Description("Creates a new command button.")
+  @Usage("/cb create <id>")
+  @Permission("commandbuttons.create")
+  public void runCreate(Player p, String id) {
+
+    final Block targetBlock = p.getTargetBlock(null, 5);
+
+    if (targetBlock.getType() == Material.AIR
+        || (Common.isServerVersionAtLeast(13) && targetBlock.getType().isAir())) {
+      ChatUtils.tell(p, i.getMessages().getString("no-target-block"));
+      return;
+    }
+
+    if (i.getButtonsManager().getButton(id) != null) {
+      ChatUtils.tell(p, Objects.requireNonNull(
+          i.getMessages().getString("id-already-exists")).replace("%id%", id));
+      return;
+    }
+
+    if (i.getButtonsManager().getButtonByLocation(targetBlock.getLocation()) != null) {
+      ChatUtils.tell(p, Objects.requireNonNull(
+          i.getMessages().getString("location-already-exists")));
+      return;
+    }
+
+    final CommandButton button = new CommandButton(
+        id,
+        Collections.singletonList(targetBlock.getLocation()),
+        "none",
+        true,
+        3000L,
+        0.0,
+        Collections.singletonList("{CONSOLE}minecraft:say Hello world!"),
+        Collections.emptyList());
+
+    i.getButtonsManager().saveButton(button);
+    ChatUtils.tell(p, Objects.requireNonNull(i.getMessages().getString("created"))
+        .replace("%id%", id));
   }
 }

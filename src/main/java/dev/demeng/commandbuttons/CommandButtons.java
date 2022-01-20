@@ -25,8 +25,11 @@
 package dev.demeng.commandbuttons;
 
 import dev.demeng.commandbuttons.commands.CommandButtonsCmd;
+import dev.demeng.commandbuttons.listeners.ButtonListener;
+import dev.demeng.commandbuttons.manager.ButtonsManager;
 import dev.demeng.pluginbase.BaseSettings;
 import dev.demeng.pluginbase.Common;
+import dev.demeng.pluginbase.Registerer;
 import dev.demeng.pluginbase.TaskUtils;
 import dev.demeng.pluginbase.UpdateChecker;
 import dev.demeng.pluginbase.UpdateChecker.Result;
@@ -58,6 +61,8 @@ public final class CommandButtons extends BasePlugin {
   private static final int MESSAGES_VERSION = 2;
   private static final int DATA_VERSION = 2;
 
+  @Getter private ButtonsManager buttonsManager;
+
   // Vault API economy hook.
   @Getter private Economy economyHook;
 
@@ -84,6 +89,9 @@ public final class CommandButtons extends BasePlugin {
     getLogger().info("Initializing base settings...");
     updateBaseSettings();
 
+    getLogger().info("Loading command buttons...");
+    buttonsManager = new ButtonsManager(this);
+
     getLogger().info("Hooking into Vault and economy plugin...");
     if (!hookEconomy()) {
       getLogger().warning("Vault and/or economy plugin not found! Skipping...");
@@ -91,6 +99,9 @@ public final class CommandButtons extends BasePlugin {
 
     getLogger().info("Registering commands...");
     getCommandManager().register(new CommandButtonsCmd(this));
+
+    getLogger().info("Registering listeners...");
+    Registerer.registerListener(new ButtonListener(this));
 
     getLogger().info("Loading metrics...");
     loadMetrics();

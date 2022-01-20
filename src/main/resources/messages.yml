@@ -35,3 +35,23 @@ help:
 
 # When configuration files have been successfully reloaded.
 reloaded: "&6Successfully reloaded configuration files."
+
+# If the player is trying to create a command button but isn't looking at any block.
+no-target-block: "&6No target block found... look at the block you want to set as a command button and try again."
+
+# If a player is trying to create a command button and the ID specified already exists.
+# %id% - The provided ID
+id-already-exists: "&6A button with ID &e%id% &6already exists. To add a new location to the button, use &e/cb addlocation&6."
+
+# If a player is trying to create a command button and the location is already a command button.
+location-already-exists: "&6This block is already a command button! Use &e/cb removelocation &6to remove it."
+
+# When a new command button is successfully created.
+# %id% - The command button ID
+created: "&6Command button created! Use &e/cb edit %id% &6to edit it."
+
+# If the player attempts to use the button before the cooldown is over.
+cooldown-active: "&6This button is on cooldown! Please wait &e%remaining%&6."
+
+# If the player does not have enough money to use the command button.
+insufficient-funds: "&6You need &e$%cost% &6to do that!"
