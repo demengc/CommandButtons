@@ -274,7 +274,9 @@ public class ButtonMenu extends Menu {
 
       p.closeInventory();
       new ChatInputRequest<>(str -> str)
-          .withInitialMessage("&6Enter a message to add, or type &ecancel &6to return.")
+          .withInitialMessage("&6Enter a message to add."
+              + "\n&6Use &e%player% &6for the player name."
+              + "\n&6Type &ecancel &6to return.")
           .onExit(() -> new ButtonMenu(i, p, button).open(p))
           .onFinish(message -> {
             button.getMessages().add(message);
