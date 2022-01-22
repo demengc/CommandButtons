@@ -27,6 +27,10 @@ package dev.demeng.commandbuttons.menus;
 import dev.demeng.commandbuttons.CommandButtons;
 import dev.demeng.commandbuttons.model.CommandButton;
 import dev.demeng.commandbuttons.util.LocationSerializer;
+import dev.demeng.pluginbase.TimeUtils;
+import dev.demeng.pluginbase.TimeUtils.DurationFormatter;
+import dev.demeng.pluginbase.Validate;
+import dev.demeng.pluginbase.input.ChatInputRequest;
 import dev.demeng.pluginbase.item.ItemBuilder;
 import dev.demeng.pluginbase.lib.xseries.XMaterial;
 import dev.demeng.pluginbase.menu.layout.Menu;
@@ -94,7 +98,15 @@ public class ButtonMenu extends Menu {
         .addLore("")
         .addLore("&eClick to edit.")
         .get(), event -> {
-      //TODO Prompt.
+      p.closeInventory();
+      new ChatInputRequest<>(str -> str)
+          .withInitialMessage("&6Enter a custom permission node, or type &ecancel &6to return.")
+          .onExit(() -> new ButtonMenu(i, p, button).open(p))
+          .onFinish(permission -> {
+            button.setPermission(permission);
+            i.getButtonsManager().saveButton(button);
+          })
+          .start(p);
     }));
   }
 
@@ -118,13 +130,23 @@ public class ButtonMenu extends Menu {
   private void addCooldownDurationButton() {
     addButton(new MenuButton(16, new ItemBuilder(XMaterial.CLOCK.parseItem())
         .name("&cCooldown Duration")
-        .addLore("&7The duration of the cooldown, in milliseconds.")
+        .addLore("&7The duration of the cooldown.")
         .addLore("")
-        .addLore("&6Current: &f" + button.getCooldownDuration() + "ms")
+        .addLore("&6Current: &f"
+            + TimeUtils.formatDuration(DurationFormatter.CONCISE, button.getCooldownDuration()))
         .addLore("")
         .addLore("&eClick to edit.")
         .get(), event -> {
-      //TODO Prompt.
+      p.closeInventory();
+      new ChatInputRequest<>(str -> TimeUtils.parseDuration(str).orElse(null))
+          .withInitialMessage(
+              "&6Enter the cooldown duration (ex. &e30s&6), or type &ecancel &6to return.")
+          .onExit(() -> new ButtonMenu(i, p, button).open(p))
+          .onFinish(duration -> {
+            button.setCooldownDuration(duration);
+            i.getButtonsManager().saveButton(button);
+          })
+          .start(p);
     }));
   }
 
@@ -137,7 +159,15 @@ public class ButtonMenu extends Menu {
         .addLore("")
         .addLore("&eClick to edit.")
         .get(), event -> {
-      //TODO Prompt.
+      p.closeInventory();
+      new ChatInputRequest<>(Validate::checkDouble)
+          .withInitialMessage("&6Enter the cost, or type &ecancel &6to return.")
+          .onExit(() -> new ButtonMenu(i, p, button).open(p))
+          .onFinish(cost -> {
+            button.setCost(cost);
+            i.getButtonsManager().saveButton(button);
+          })
+          .start(p);
     }));
   }
 
@@ -184,7 +214,24 @@ public class ButtonMenu extends Menu {
         return;
       }
 
-      //TODO Prompt.
+      p.closeInventory();
+      new ChatInputRequest<>(str -> str)
+          .withInitialMessage("&6Enter a command to add, without the &e/&6."
+              + "\n&6Add &a* &6in front to have it executed by console."
+              + "\n&6Use &e%player% &6for the player name."
+              + "\n&6Type &ecancel &6to return.")
+          .onExit(() -> new ButtonMenu(i, p, button).open(p))
+          .onFinish(command -> {
+
+            if (command.startsWith("*")) {
+              button.getCommands().add(command.replaceFirst("\\*", CommandButton.CONSOLE_PREFIX));
+            } else {
+              button.getCommands().add(command);
+            }
+
+            i.getButtonsManager().saveButton(button);
+          })
+          .start(p);
     }));
   }
 
@@ -225,7 +272,15 @@ public class ButtonMenu extends Menu {
         return;
       }
 
-      //TODO Prompt.
+      p.closeInventory();
+      new ChatInputRequest<>(str -> str)
+          .withInitialMessage("&6Enter a message to add, or type &ecancel &6to return.")
+          .onExit(() -> new ButtonMenu(i, p, button).open(p))
+          .onFinish(message -> {
+            button.getMessages().add(message);
+            i.getButtonsManager().saveButton(button);
+          })
+          .start(p);
     }));
   }
 

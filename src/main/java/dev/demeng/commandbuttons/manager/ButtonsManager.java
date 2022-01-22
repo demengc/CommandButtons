@@ -107,7 +107,12 @@ public class ButtonsManager {
    */
   public void saveButton(CommandButton button) {
 
-    final ConfigurationSection section = i.getData().createSection("buttons." + button.getId());
+    final String path = "buttons." + button.getId();
+    ConfigurationSection section = i.getData().getConfigurationSection(path);
+
+    if (section == null) {
+      section = i.getData().createSection(path);
+    }
 
     final List<String> locations = button.getLocations().stream()
         .map(LocationSerializer::serialize)
