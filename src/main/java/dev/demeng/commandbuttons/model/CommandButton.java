@@ -26,14 +26,17 @@ package dev.demeng.commandbuttons.model;
 
 import dev.demeng.commandbuttons.CommandButtons;
 import dev.demeng.commandbuttons.util.LocationSerializer;
+import dev.demeng.pluginbase.Common;
 import dev.demeng.pluginbase.TimeUtils.DurationFormatter;
 import dev.demeng.pluginbase.chat.ChatUtils;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -58,6 +61,10 @@ public class CommandButton {
 
   // The prefix that all commands executed by the console should have.
   public static final String CONSOLE_PREFIX = "{CONSOLE}";
+  // The configuration key that indicates the data is for the global context.
+  private static final String GLOBAL_KEY = "GLOBAL";
+  // The minimum cooldown duration for it to be saved and persist across restarts/reloads.
+  private static final int COOLDOWN_SAVE_THRESHOLD = 5000;
 
   private final String id;
   private List<Location> locations;
@@ -68,7 +75,7 @@ public class CommandButton {
   private List<String> commands;
   private List<String> messages;
 
-  private final Map<Player, Long> lastUsed = new HashMap<>();
+  private final Map<UUID, Long> lastUsed = new HashMap<>();
 
   /**
    * Gets a command button object from config.
@@ -88,7 +95,7 @@ public class CommandButton {
       locations.add(LocationSerializer.deserialize(strLoc));
     }
 
-    return new CommandButton(id,
+    final CommandButton button = new CommandButton(id,
         locations,
         section.getString("permission"),
         section.getBoolean("cooldown.per-player"),
@@ -96,6 +103,37 @@ public class CommandButton {
         section.getDouble("cost"),
         section.getStringList("commands"),
         section.getStringList("messages"));
+
+    final ConfigurationSection lastUsedSection = section.getConfigurationSection("last-used");
+
+    if (lastUsedSection != null) {
+
+      boolean modified = false;
+
+      for (String key : lastUsedSection.getKeys(false)) {
+        final long playerLastUsed = lastUsedSection.getLong(key);
+
+        // Cooldown already expired, just remove.
+        if (playerLastUsed + button.getCooldownDuration() <= System.currentTimeMillis()) {
+          lastUsedSection.set(key, null);
+          modified = true;
+          continue;
+        }
+
+        button.getLastUsed().put(key.equals(GLOBAL_KEY) ? null : UUID.fromString(key),
+            lastUsedSection.getLong(key));
+      }
+
+      if (modified) {
+        try {
+          CommandButtons.getInstance().getDataFile().save();
+        } catch (IOException ex) {
+          Common.error(ex, "Failed to save data.", false);
+        }
+      }
+    }
+
+    return button;
   }
 
   /**
@@ -140,7 +178,8 @@ public class CommandButton {
       }
     }
 
-    lastUsed.put(perPlayerCooldown ? p : null, System.currentTimeMillis());
+    lastUsed.put(perPlayerCooldown ? p.getUniqueId() : null, System.currentTimeMillis());
+    saveLastUsed(perPlayerCooldown ? p : null);
 
     for (String str : commands) {
       final String command = str.replace("%player%", p.getName());
@@ -164,7 +203,7 @@ public class CommandButton {
    * Gets the remaining cooldown, in milliseconds, before the player (or global) can use the button
    * again.
    *
-   * @param p The player to check, or null for global
+   * @param p The player to check
    * @return The remaining cooldown, or -1 is no cooldown
    */
   private long getRemainingCooldown(Player p) {
@@ -173,7 +212,12 @@ public class CommandButton {
         (getLastUsed(perPlayerCooldown ? p : null) + cooldownDuration) - System.currentTimeMillis();
 
     if (remaining <= 0) {
-      lastUsed.remove(p);
+      lastUsed.remove(perPlayerCooldown ? p : null);
+
+      if (cooldownDuration >= COOLDOWN_SAVE_THRESHOLD) {
+        deleteLastUsed(perPlayerCooldown ? p : null);
+      }
+
       return -1;
     }
 
@@ -189,12 +233,58 @@ public class CommandButton {
    */
   private long getLastUsed(Player p) {
 
-    final Long playerLastUsed = lastUsed.get(p);
+    final Long playerLastUsed = lastUsed.get(p == null ? null : p.getUniqueId());
 
     if (playerLastUsed == null) {
       return -1;
     }
 
     return playerLastUsed;
+  }
+
+  /**
+   * Saves the last time the player used the button to config.
+   *
+   * @param p The player to save, or null for global
+   */
+  private void saveLastUsed(Player p) {
+
+    // If the cooldown is less than the threshold, don't bother saving.
+    if (cooldownDuration < COOLDOWN_SAVE_THRESHOLD) {
+      return;
+    }
+
+    final String key = p == null ? GLOBAL_KEY : p.getUniqueId().toString();
+    final long playerLastUsed = getLastUsed(p);
+
+    if (playerLastUsed != -1) {
+
+      CommandButtons.getInstance().getData()
+          .set("buttons." + id + ".last-used." + key, playerLastUsed);
+
+      try {
+        CommandButtons.getInstance().getDataFile().save();
+      } catch (IOException ex) {
+        Common.error(ex, "Failed to save data.", false);
+      }
+    }
+  }
+
+  /**
+   * Deletes the last used data of the player from config.
+   *
+   * @param p The player data to delete, or null for global
+   */
+  private void deleteLastUsed(Player p) {
+
+    final String key = p == null ? GLOBAL_KEY : p.getUniqueId().toString();
+
+    CommandButtons.getInstance().getData().set("buttons." + id + ".last-used." + key, null);
+
+    try {
+      CommandButtons.getInstance().getDataFile().save();
+    } catch (IOException ex) {
+      Common.error(ex, "Failed to save data.", false);
+    }
   }
 }
