@@ -41,9 +41,12 @@ import dev.demeng.pluginbase.command.annotations.Permission;
 import dev.demeng.pluginbase.command.annotations.SubCommand;
 import dev.demeng.pluginbase.command.annotations.Usage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -123,13 +126,13 @@ public class CommandButtonsCmd extends CommandBase {
 
     final CommandButton button = new CommandButton(
         id,
-        Collections.singletonList(targetBlock.getLocation()),
+        new ArrayList<>(Collections.singletonList(targetBlock.getLocation())),
         "none",
         true,
         3000L,
         0.0,
-        Collections.singletonList("{CONSOLE}minecraft:say Hello world!"),
-        Collections.emptyList());
+        new ArrayList<>(Collections.singletonList("{CONSOLE}minecraft:say Hello world!")),
+        new ArrayList<>(Collections.emptyList()));
 
     i.getButtonsManager().saveButton(button);
     ChatUtils.tell(p, Objects.requireNonNull(i.getMessages().getString("created"))
@@ -158,5 +161,84 @@ public class CommandButtonsCmd extends CommandBase {
     }
 
     new ButtonMenu(i, p, button).open(p);
+  }
+
+  @SubCommand("addlocation")
+  @Description("Adds a new location to the command button.")
+  @Usage("/cb addLocation <id>")
+  @Permission("commandbuttons.editor")
+  public void runAddLocation(Player p, String id) {
+
+    final Block targetBlock = p.getTargetBlock(null, 5);
+
+    if (Utils.isAir(targetBlock)) {
+      ChatUtils.tell(p, i.getMessages().getString("no-target-block"));
+      return;
+    }
+
+    final CommandButton button = i.getButtonsManager().getButton(id);
+
+    if (button == null) {
+      tellIncorrectUsage(null);
+      return;
+    }
+
+    if (i.getButtonsManager().getButtonByLocation(targetBlock.getLocation()) != null) {
+      ChatUtils.tell(p, Objects.requireNonNull(
+          i.getMessages().getString("location-already-exists")));
+      return;
+    }
+
+    button.getLocations().add(targetBlock.getLocation());
+    i.getButtonsManager().saveButton(button);
+
+    ChatUtils.tell(p, Objects.requireNonNull(i.getMessages().getString("location-added"))
+        .replace("%id%", id));
+  }
+
+  @SubCommand("removelocation")
+  @Description("Removes a location from the command button.")
+  @Usage("/cb removeLocation <id>")
+  @Permission("commandbuttons.editor")
+  public void runRemoveLocation(Player p, String id) {
+
+    final Block targetBlock = p.getTargetBlock(null, 5);
+
+    if (Utils.isAir(targetBlock)) {
+      ChatUtils.tell(p, i.getMessages().getString("no-target-block"));
+      return;
+    }
+
+    final CommandButton button = i.getButtonsManager().getButton(id);
+
+    if (button == null) {
+      tellIncorrectUsage(null);
+      return;
+    }
+
+    boolean removed = false;
+
+    final Iterator<Location> iterator = button.getLocations().iterator();
+
+    while (iterator.hasNext()) {
+      final Location loc = iterator.next();
+      if (Objects.equals(loc.getWorld(), targetBlock.getLocation().getWorld())
+          && loc.getBlockX() == targetBlock.getLocation().getBlockX()
+          && loc.getBlockY() == targetBlock.getLocation().getBlockY()
+          && loc.getBlockZ() == targetBlock.getLocation().getBlockZ()) {
+        removed = true;
+        iterator.remove();
+      }
+    }
+
+    if (removed) {
+      i.getButtonsManager().saveButton(button);
+      ChatUtils.tell(p, Objects.requireNonNull(i.getMessages().getString("location-removed"))
+          .replace("%id%", id));
+      return;
+    }
+
+    ChatUtils.tell(p, Objects.requireNonNull(i.getMessages().getString("location-not-exists"))
+        .replace("%id%", id));
   }
 }
