@@ -134,6 +134,8 @@ public class CommandButtonsCmd extends CommandBase {
     i.getButtonsManager().saveButton(button);
     ChatUtils.tell(p, Objects.requireNonNull(i.getMessages().getString("created"))
         .replace("%id%", id));
+
+    new ButtonMenu(i, p, button).open(p);
   }
 
   @SubCommand("editor")
