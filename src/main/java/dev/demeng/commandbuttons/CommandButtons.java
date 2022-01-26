@@ -89,9 +89,6 @@ public final class CommandButtons extends BasePlugin {
     getLogger().info("Initializing base settings...");
     updateBaseSettings();
 
-    getLogger().info("Loading command buttons...");
-    buttonsManager = new ButtonsManager(this);
-
     getLogger().info("Hooking into Vault and economy plugin...");
     if (!hookEconomy()) {
       getLogger().warning("Vault and/or economy plugin not found! Skipping...");
@@ -102,6 +99,11 @@ public final class CommandButtons extends BasePlugin {
 
     getLogger().info("Registering listeners...");
     Registerer.registerListener(new ButtonListener(this));
+
+    TaskUtils.delay(task -> {
+      getLogger().info("Loading command buttons...");
+      buttonsManager = new ButtonsManager(this);
+    }, 5L);
 
     getLogger().info("Loading metrics...");
     loadMetrics();
