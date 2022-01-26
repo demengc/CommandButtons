@@ -1,0 +1,75 @@
+# -----------------------------------------------------------------------------
+# ___________________
+# \_   ___ \______   \
+# /    \  \/|    |  _/
+# \     \___|    |   \
+#  \______  |______  /
+#         \/       \/
+# |
+# MESSAGES.YML - This is where you configure the locale for CommandButtons.
+# Support: https://demeng.dev/discord
+# -----------------------------------------------------------------------------
+
+config-version: 2
+
+# The prefix that will be displayed in front of most messages.
+prefix: "&8[&4CB&8] &r"
+
+# If the command is players-only but was executed by the console.
+not-player: "&6You must be a player to execute that command."
+
+# If the command executor does not have sufficient permission.
+# Use %permission% for the required permission.
+insufficient-permission: "&6You must have the &e%permission% &6permission to do that!"
+
+# If the command sender does not provide enough/valid arguments.
+# Use %usage% for the correct usage.
+incorrect-usage: "&6Incorrect usage! Did you mean: &e%usage%"
+
+# When the list of commands are requested.
+help:
+  - "&c&lList of Commands for CommandButtons:&r"
+  - "&6/cb &8- &6The main command for CommandButtons."
+  - "&6/cb help &8- &6Displays the list of commands."
+  - "&6/cb reload &8- &6Reloads configuration files."
+  - "&6/cb create <id>&8- &6Creates a new command button."
+  - "&6/cb editor [id]&8- &6Opens the buttons editor."
+  - "&6/cb addLocation <id>&8- &6Adds a button location."
+  - "&6/cb removeLocation <id>&8- &6Removes a button location."
+
+# When configuration files have been successfully reloaded.
+reloaded: "&6Successfully reloaded configuration files."
+
+# If the player is trying to create a command button but isn't looking at any block.
+no-target-block: "&6No target block found... look at the block you want to set as a command button and try again."
+
+# If a player is trying to create a command button and the ID specified already exists.
+# %id% - The provided ID
+id-already-exists: "&6A button with ID &e%id% &6already exists. To add a new location to the button, use &e/cb addLocation&6."
+
+# If a player is trying to create a command button and the location is already a command button.
+location-already-exists: "&6This block is already a command button! Use &e/cb removeLocation &6to remove it."
+
+# When a new command button is successfully created.
+# %id% - The command button ID
+created: "&6The block you're looking at is now a command button! Use &e/cb edit %id% &6to edit it."
+
+# If the player attempts to use the button before the cooldown is over.
+# %remaining% - The remaining duration of the cooldown
+cooldown-active: "&6This button is on cooldown! Please wait &e%remaining%&6."
+
+# If the player does not have enough money to use the command button.
+# %cost% - The cost of the button
+insufficient-funds: "&6You need &e$%cost% &6to do that!"
+
+# When a player adds a location to a command button.
+# %id% - The ID of the button
+location-added: "&6Added the block you're looking at to button &e%id%&6."
+
+# When a player removes a location from a command button.
+# %id% - The ID of the button
+location-removed: "&6Removed the block you're looking at from button &e%id%&6."
+
+# If a player tries to remove a location that is not a part of the command button.
+# %id% - The ID of the button
+location-not-exists: "&6This location is not added to button &e%id%&6."
