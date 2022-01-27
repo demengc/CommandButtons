@@ -60,6 +60,13 @@ public class ButtonListener implements Listener {
       return;
     }
 
+    final CommandButton button = i.getButtonsManager()
+        .getButtonByLocation(e.getClickedBlock().getLocation());
+
+    if (button == null) {
+      return;
+    }
+
     if (lastInteracted.getOrDefault(e.getPlayer(), 0L) + TIMEOUT >= System.currentTimeMillis()) {
       e.setCancelled(true);
       return;
@@ -67,13 +74,8 @@ public class ButtonListener implements Listener {
 
     lastInteracted.put(e.getPlayer(), System.currentTimeMillis());
 
-    final CommandButton button = i.getButtonsManager()
-        .getButtonByLocation(e.getClickedBlock().getLocation());
-
-    if (button != null) {
-      // Cancel event if button use is unsuccessful.
-      e.setCancelled(!button.use(e.getPlayer()));
-    }
+    // Cancel event if button use is unsuccessful.
+    e.setCancelled(!button.use(e.getPlayer()));
   }
 
   @EventHandler(priority = EventPriority.MONITOR)
