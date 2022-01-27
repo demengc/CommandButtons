@@ -100,11 +100,6 @@ public final class CommandButtons extends BasePlugin {
     getLogger().info("Registering listeners...");
     Registerer.registerListener(new ButtonListener(this));
 
-    TaskUtils.delay(task -> {
-      getLogger().info("Loading command buttons...");
-      buttonsManager = new ButtonsManager(this);
-    }, 5L);
-
     getLogger().info("Loading metrics...");
     loadMetrics();
 
@@ -114,6 +109,11 @@ public final class CommandButtons extends BasePlugin {
     ChatUtils.console("&aCommandButtons v" + Common.getVersion()
         + " by Demeng has been enabled in "
         + (System.currentTimeMillis() - startTime) + " ms.");
+
+    TaskUtils.delay(task -> {
+      buttonsManager = new ButtonsManager(this);
+      getLogger().info("Loaded " + buttonsManager.getButtons().size() + " command button(s).");
+    }, 5L);
   }
 
   @Override
