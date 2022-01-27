@@ -89,9 +89,6 @@ public final class CommandButtons extends BasePlugin {
     getLogger().info("Initializing base settings...");
     updateBaseSettings();
 
-    getLogger().info("Loading command buttons...");
-    buttonsManager = new ButtonsManager(this);
-
     getLogger().info("Hooking into Vault and economy plugin...");
     if (!hookEconomy()) {
       getLogger().warning("Vault and/or economy plugin not found! Skipping...");
@@ -112,6 +109,11 @@ public final class CommandButtons extends BasePlugin {
     ChatUtils.console("&aCommandButtons v" + Common.getVersion()
         + " by Demeng has been enabled in "
         + (System.currentTimeMillis() - startTime) + " ms.");
+
+    TaskUtils.delay(task -> {
+      buttonsManager = new ButtonsManager(this);
+      getLogger().info("Loaded " + buttonsManager.getButtons().size() + " command button(s).");
+    }, 5L);
   }
 
   @Override
