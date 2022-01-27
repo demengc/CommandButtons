@@ -27,12 +27,16 @@ package dev.demeng.commandbuttons.listeners;
 import dev.demeng.commandbuttons.CommandButtons;
 import dev.demeng.commandbuttons.model.CommandButton;
 import dev.demeng.pluginbase.Common;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
 /**
@@ -41,16 +45,27 @@ import org.bukkit.inventory.EquipmentSlot;
 @RequiredArgsConstructor
 public class ButtonListener implements Listener {
 
+  // The button interaction timeout, in milliseconds.
+  private static final int TIMEOUT = 500;
+
   private final CommandButtons i;
+  private final Map<Player, Long> lastInteracted = new HashMap<>();
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onPlayerInteract(PlayerInteractEvent e) {
 
-    if ((Common.isServerVersionAtLeast(9) && e.getHand() != EquipmentSlot.HAND)
+    if (e.getClickedBlock() == null
         || (e.getAction() != Action.RIGHT_CLICK_BLOCK && e.getAction() != Action.PHYSICAL)
-        || e.getClickedBlock() == null) {
+        || (Common.isServerVersionAtLeast(9) && e.getHand() == EquipmentSlot.OFF_HAND)) {
       return;
     }
+
+    if (lastInteracted.getOrDefault(e.getPlayer(), 0L) + TIMEOUT >= System.currentTimeMillis()) {
+      e.setCancelled(true);
+      return;
+    }
+
+    lastInteracted.put(e.getPlayer(), System.currentTimeMillis());
 
     final CommandButton button = i.getButtonsManager()
         .getButtonByLocation(e.getClickedBlock().getLocation());
@@ -59,5 +74,10 @@ public class ButtonListener implements Listener {
       // Cancel event if button use is unsuccessful.
       e.setCancelled(!button.use(e.getPlayer()));
     }
+  }
+
+  @EventHandler(priority = EventPriority.MONITOR)
+  public void onPlayerQuit(PlayerQuitEvent e) {
+    lastInteracted.remove(e.getPlayer());
   }
 }
