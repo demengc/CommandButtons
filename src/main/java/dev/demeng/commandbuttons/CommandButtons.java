@@ -54,10 +54,12 @@ public final class CommandButtons extends BasePlugin {
   @Getter @Setter(AccessLevel.PACKAGE) private static CommandButtons instance;
 
   // Managers for the corresponding configuration file.
+  @Getter private YamlConfig settingsFile;
   @Getter private YamlConfig messagesFile;
   @Getter private YamlConfig dataFile;
 
   // Versions of the corresponding configuration file.
+  private static final int SETTINGS_VERSION = 1;
   private static final int MESSAGES_VERSION = 2;
   private static final int DATA_VERSION = 2;
 
@@ -133,6 +135,14 @@ public final class CommandButtons extends BasePlugin {
     String currentlyLoading = "configuration files";
 
     try {
+      currentlyLoading = "settings.yml";
+      settingsFile = new YamlConfig(currentlyLoading);
+
+      if (settingsFile.isOutdated(SETTINGS_VERSION)) {
+        Common.error(null, "Outdated settings.yml file.", true);
+        return false;
+      }
+
       currentlyLoading = "messages.yml";
       messagesFile = new YamlConfig(currentlyLoading);
 
@@ -242,6 +252,10 @@ public final class CommandButtons extends BasePlugin {
         getLogger().warning("Failed to check for updates.");
       }
     });
+  }
+
+  public FileConfiguration getSettings() {
+    return settingsFile.getConfig();
   }
 
   public FileConfiguration getMessages() {

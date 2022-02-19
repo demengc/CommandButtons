@@ -74,8 +74,22 @@ public class ButtonListener implements Listener {
 
     lastInteracted.put(e.getPlayer(), System.currentTimeMillis());
 
-    // Cancel event if button use is unsuccessful.
-    e.setCancelled(!button.use(e.getPlayer()));
+    final boolean success = button.use(e.getPlayer());
+
+    // If the command button use was successful.
+    if (success) {
+
+      // Cancel interaction if material is on the "disable interaction" list.
+      if (i.getSettings().getStringList("disable-interaction").stream()
+          .anyMatch(str -> str.equalsIgnoreCase(e.getClickedBlock().getType().name()))) {
+        e.setCancelled(true);
+      }
+
+      return;
+    }
+
+    // Cancel interaction if unsuccessful.
+    e.setCancelled(true);
   }
 
   @EventHandler(priority = EventPriority.MONITOR)

@@ -1,0 +1,19 @@
+# -----------------------------------------------------------------------------
+# ___________________
+# \_   ___ \______   \
+# /    \  \/|    |  _/
+# \     \___|    |   \
+#  \______  |______  /
+#         \/       \/
+# |
+# SETTINGS.YML - This is where you configure general settings for CommandButtons.
+# Support: https://demeng.dev/discord
+# -----------------------------------------------------------------------------
+
+config-version: 1
+
+# List of blocks that should have their interaction DISABLED if they are a command button.
+# For example, adding "CHEST" would make chests that are command buttons UNOPENABLE.
+disable-interaction:
+  # Just an example- obviously stone doesn't do anything on interaction anyways.
+  - "STONE"

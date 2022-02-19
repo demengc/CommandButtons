@@ -86,6 +86,7 @@ public class CommandButtonsCmd extends CommandBase {
   public void runReload(CommandSender sender) {
 
     try {
+      i.getSettingsFile().reload();
       i.getMessagesFile().reload();
       i.getDataFile().reload();
     } catch (IOException | InvalidConfigurationException ex) {
