@@ -6,7 +6,7 @@
 
   <groupId>dev.demeng</groupId>
   <artifactId>commandbuttons</artifactId>
-  <version>5.1.0</version>
+  <version>5.1.1</version>
   <packaging>jar</packaging>
 
   <name>CommandButtons</name>
@@ -81,7 +81,7 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.18.1-R0.1-SNAPSHOT</version>
+      <version>1.19.2-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -99,19 +99,19 @@
     <dependency>
       <groupId>org.bstats</groupId>
       <artifactId>bstats-bukkit</artifactId>
-      <version>2.2.1</version>
+      <version>3.0.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.jetbrains</groupId>
       <artifactId>annotations</artifactId>
-      <version>20.1.0</version>
+      <version>23.0.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.22</version>
+      <version>1.18.24</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>

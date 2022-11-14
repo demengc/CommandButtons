@@ -28,6 +28,7 @@ import dev.demeng.commandbuttons.CommandButtons;
 import dev.demeng.commandbuttons.model.CommandButton;
 import dev.demeng.commandbuttons.util.LocationSerializer;
 import dev.demeng.commandbuttons.util.Utils;
+import dev.demeng.pluginbase.Common;
 import dev.demeng.pluginbase.item.ItemBuilder;
 import dev.demeng.pluginbase.lib.xseries.XMaterial;
 import dev.demeng.pluginbase.menu.layout.Menu;
@@ -40,6 +41,7 @@ import java.util.stream.IntStream;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -84,13 +86,17 @@ public class ButtonsListMenu extends PagedMenu {
     for (CommandButton button : i.getButtonsManager().getButtons()) {
 
       // The material of the block at the first non-air location, or a barrier is not applicable.
-      Material material = Material.BARRIER;
+      ItemStack stack = new ItemStack(Material.BARRIER);
 
       for (Location loc : button.getLocations()) {
         if (!Utils.isAir(loc.getBlock())) {
-          material = loc.getBlock().getType();
+          stack = new ItemStack(loc.getBlock().getType());
           break;
         }
+      }
+
+      if (Common.getServerMajorVersion() < 13 && stack.getType().name().equals("SKULL")) {
+        stack = new ItemStack(Material.valueOf("SKULL_ITEM"), 1, (short) 3);
       }
 
       final List<String> lore = new ArrayList<>();
@@ -116,7 +122,7 @@ public class ButtonsListMenu extends PagedMenu {
       lore.add("");
       lore.add("&eClick to edit.");
 
-      buttons.add(new MenuButton(-1, new ItemBuilder(material)
+      buttons.add(new MenuButton(-1, new ItemBuilder(stack)
           .name("&c" + button.getId())
           .lore(lore).get(),
           event -> new ButtonMenu(i, p, button).open(p)));
