@@ -10,21 +10,24 @@
 # Support: https://demeng.dev/discord
 # -----------------------------------------------------------------------------
 
-config-version: 2
+config-version: 3
 
 # The prefix that will be displayed in front of most messages.
 prefix: "&8[&4CB&8] &r"
 
 # If the command is players-only but was executed by the console.
-not-player: "&6You must be a player to execute that command."
+must-be-player: "&6You must be a player to execute that command."
 
 # If the command executor does not have sufficient permission.
 # Use %permission% for the required permission.
-insufficient-permission: "&6You must have the &e%permission% &6permission to do that!"
+no-permission: "&6You must have the &e%permission% &6permission to do that!"
 
 # If the command sender does not provide enough/valid arguments.
 # Use %usage% for the correct usage.
-incorrect-usage: "&6Incorrect usage! Did you mean: &e%usage%"
+missing-argument: "&6You must specify a value for the &e{0}&6."
+
+# If the command sender does not provide a valid command button ID.
+invalid-button: "&6There are no command buttons with that ID."
 
 # When the list of commands are requested.
 help:
@@ -73,3 +76,11 @@ location-removed: "&6Removed the block you're looking at from button &e%id%&6."
 # If a player tries to remove a location that is not a part of the command button.
 # %id% - The ID of the button
 location-not-exists: "&6This location is not added to button &e%id%&6."
+
+# Input Requests
+input-requests:
+  exit-value: cancel
+  default-title: "&6Awaiting Input"
+  default-subtitle: "&fSee chat for details."
+  default-retry-message: "&6Invalid input! Please try again."
+  default-timeout-message: "&6You did not respond in time!"

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018-2022 Demeng Chen
+ * Copyright (c) 2023 Demeng Chen
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -53,25 +53,25 @@ public class ButtonsListMenu extends PagedMenu {
     super(54, "Command Buttons", new Settings() {
       @Override
       public @NotNull MenuButton getPreviousButton() {
-        return new MenuButton(45, new ItemBuilder(XMaterial.GREEN_DYE.parseItem())
+        return MenuButton.create(45, ItemBuilder.create(XMaterial.GREEN_DYE.parseItem())
             .name("&c< Previous Page").get(), null);
       }
 
       @Override
       public @NotNull MenuButton getDummyPreviousButton() {
-        return new MenuButton(45, new ItemBuilder(XMaterial.GRAY_DYE.parseItem())
+        return MenuButton.create(45, ItemBuilder.create(XMaterial.GRAY_DYE.parseItem())
             .name("&7You are on the first page.").get(), null);
       }
 
       @Override
       public @NotNull MenuButton getNextButton() {
-        return new MenuButton(53, new ItemBuilder(XMaterial.GREEN_DYE.parseItem())
+        return MenuButton.create(53, ItemBuilder.create(XMaterial.GREEN_DYE.parseItem())
             .name("&aNext Page >").get(), null);
       }
 
       @Override
       public @NotNull MenuButton getDummyNextButton() {
-        return new MenuButton(53, new ItemBuilder(XMaterial.GRAY_DYE.parseItem())
+        return MenuButton.create(53, ItemBuilder.create(XMaterial.GRAY_DYE.parseItem())
             .name("&7You are on the last page.").get(), null);
       }
 
@@ -122,9 +122,9 @@ public class ButtonsListMenu extends PagedMenu {
       lore.add("");
       lore.add("&eClick to edit.");
 
-      buttons.add(new MenuButton(-1, new ItemBuilder(stack)
-          .name("&c" + button.getId())
-          .lore(lore).get(),
+      buttons.add(MenuButton.create(-1, ItemBuilder.create(stack)
+              .name("&c" + button.getId())
+              .lore(lore).get(),
           event -> new ButtonMenu(i, p, button).open(p)));
     }
 

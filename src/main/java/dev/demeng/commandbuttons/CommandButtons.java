@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018-2022 Demeng Chen
+ * Copyright (c) 2023 Demeng Chen
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,14 +29,15 @@ import dev.demeng.commandbuttons.listeners.ButtonListener;
 import dev.demeng.commandbuttons.manager.ButtonsManager;
 import dev.demeng.pluginbase.BaseSettings;
 import dev.demeng.pluginbase.Common;
-import dev.demeng.pluginbase.Registerer;
-import dev.demeng.pluginbase.TaskUtils;
+import dev.demeng.pluginbase.Schedulers;
 import dev.demeng.pluginbase.UpdateChecker;
 import dev.demeng.pluginbase.UpdateChecker.Result;
 import dev.demeng.pluginbase.YamlConfig;
-import dev.demeng.pluginbase.chat.ChatUtils;
+import dev.demeng.pluginbase.locale.reader.ConfigLocaleReader;
 import dev.demeng.pluginbase.plugin.BasePlugin;
+import dev.demeng.pluginbase.text.Text;
 import java.io.IOException;
+import java.util.Locale;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,6 +46,7 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import revxrsal.commands.bukkit.BukkitCommandHandler;
 
 /**
  * The main class for CommandButtons.
@@ -60,7 +62,7 @@ public final class CommandButtons extends BasePlugin {
 
   // Versions of the corresponding configuration file.
   private static final int SETTINGS_VERSION = 1;
-  private static final int MESSAGES_VERSION = 2;
+  private static final int MESSAGES_VERSION = 3;
   private static final int DATA_VERSION = 2;
 
   @Getter private ButtonsManager buttonsManager;
@@ -75,7 +77,7 @@ public final class CommandButtons extends BasePlugin {
 
     setInstance(this);
 
-    ChatUtils.coloredConsole("\n\n"
+    Text.coloredConsole("\n\n"
         + "&4___________________ \n"
         + "&4\\_   ___ \\______   \\\n"
         + "&4/    \\  \\/|    |  _/\n"
@@ -90,6 +92,7 @@ public final class CommandButtons extends BasePlugin {
 
     getLogger().info("Initializing base settings...");
     updateBaseSettings();
+    getTranslator().add(new ConfigLocaleReader(getMessages(), Locale.ENGLISH));
 
     getLogger().info("Hooking into Vault and economy plugin...");
     if (!hookEconomy()) {
@@ -97,10 +100,11 @@ public final class CommandButtons extends BasePlugin {
     }
 
     getLogger().info("Registering commands...");
-    getCommandManager().register(new CommandButtonsCmd(this));
+    final BukkitCommandHandler commandHandler = BukkitCommandHandler.create(this);
+    commandHandler.register(new CommandButtonsCmd(this));
 
     getLogger().info("Registering listeners...");
-    Registerer.registerListener(new ButtonListener(this));
+    bindModule(new ButtonListener(this));
 
     getLogger().info("Loading metrics...");
     loadMetrics();
@@ -108,11 +112,11 @@ public final class CommandButtons extends BasePlugin {
     getLogger().info("Checking for updates...");
     checkUpdates();
 
-    ChatUtils.console("&aCommandButtons v" + Common.getVersion()
+    Text.console("&aCommandButtons v" + Common.getVersion()
         + " by Demeng has been enabled in "
         + (System.currentTimeMillis() - startTime) + " ms.");
 
-    TaskUtils.delay(task -> {
+    Schedulers.sync().runLater(() -> {
       buttonsManager = new ButtonsManager(this);
       getLogger().info("Loaded " + buttonsManager.getButtons().size() + " command button(s).");
     }, 5L);
@@ -120,7 +124,7 @@ public final class CommandButtons extends BasePlugin {
 
   @Override
   public void disable() {
-    ChatUtils.console("&cCommandButtons v" + Common.getVersion() + " by Demeng has been disabled.");
+    Text.console("&cCommandButtons v" + Common.getVersion() + " by Demeng has been disabled.");
   }
 
   /**
@@ -176,21 +180,6 @@ public final class CommandButtons extends BasePlugin {
       public String prefix() {
         return getMessages().getString("prefix");
       }
-
-      @Override
-      public String notPlayer() {
-        return getMessages().getString("not-player");
-      }
-
-      @Override
-      public String insufficientPermission() {
-        return getMessages().getString("insufficient-permission");
-      }
-
-      @Override
-      public String incorrectUsage() {
-        return getMessages().getString("incorrect-usage");
-      }
     });
   }
 
@@ -234,17 +223,16 @@ public final class CommandButtons extends BasePlugin {
    * Checks if the current plugin version matches the one on SpigotMC.
    */
   private void checkUpdates() {
-    TaskUtils.runAsync(task -> {
+    Schedulers.async().run(() -> {
       final UpdateChecker checker = new UpdateChecker(60991);
 
       if (checker.getResult() == Result.OUTDATED) {
-        ChatUtils.coloredConsole(
-            "&2" + ChatUtils.CONSOLE_LINE,
-            "&aA newer version of CommandButtons is available!",
-            "&aCurrent version: &r" + Common.getVersion(),
-            "&aLatest version: &r" + checker.getLatestVersion(),
-            "&aGet the update: &rhttps://spigotmc.org/resources/60991",
-            "&2" + ChatUtils.CONSOLE_LINE);
+        Text.coloredConsole("&2" + Text.CONSOLE_LINE);
+        Text.coloredConsole("&aA newer version of CommandButtons is available!");
+        Text.coloredConsole("&aCurrent version: &r" + Common.getVersion());
+        Text.coloredConsole("&aLatest version: &r" + checker.getLatestVersion());
+        Text.coloredConsole("&aGet the update: &rhttps://spigotmc.org/resources/60991");
+        Text.coloredConsole("&2" + Text.CONSOLE_LINE);
         return;
       }
 

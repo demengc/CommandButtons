@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018-2022 Demeng Chen
+ * Copyright (c) 2023 Demeng Chen
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,10 +27,10 @@ package dev.demeng.commandbuttons.model;
 import dev.demeng.commandbuttons.CommandButtons;
 import dev.demeng.commandbuttons.util.LocationSerializer;
 import dev.demeng.pluginbase.Common;
-import dev.demeng.pluginbase.TimeUtils.DurationFormatter;
-import dev.demeng.pluginbase.chat.ChatUtils;
+import dev.demeng.pluginbase.Time;
+import dev.demeng.pluginbase.Time.DurationFormatter;
+import dev.demeng.pluginbase.text.Text;
 import java.io.IOException;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -147,7 +147,7 @@ public class CommandButton {
     final FileConfiguration messagesConfig = CommandButtons.getInstance().getMessages();
 
     if (!permission.equalsIgnoreCase("none") && !p.hasPermission(permission)) {
-      ChatUtils.tell(p, Objects.requireNonNull(messagesConfig.getString("insufficient-permission"))
+      Text.tell(p, Objects.requireNonNull(messagesConfig.getString("insufficient-permission"))
           .replace("%permission%", permission));
       return false;
     }
@@ -156,9 +156,9 @@ public class CommandButton {
       final long remainingCooldown = getRemainingCooldown(p);
 
       if (remainingCooldown > 0) {
-        ChatUtils.tell(p, Objects.requireNonNull(messagesConfig.getString("cooldown-active"))
-            .replace("%remaining%",
-                DurationFormatter.LONG.format(Duration.ofMillis(remainingCooldown))));
+        Text.tell(p, Objects.requireNonNull(messagesConfig.getString("cooldown-active"))
+            .replace("%remaining%", Time.formatDuration(
+                DurationFormatter.LONG, remainingCooldown)));
         return false;
       }
     }
@@ -169,7 +169,7 @@ public class CommandButton {
       if (econ != null) {
 
         if (!econ.has(p, cost)) {
-          ChatUtils.tell(p, Objects.requireNonNull(messagesConfig.getString("insufficient-funds"))
+          Text.tell(p, Objects.requireNonNull(messagesConfig.getString("insufficient-funds"))
               .replace("%cost%", String.format("%.2f", cost)));
           return false;
         }
@@ -193,7 +193,7 @@ public class CommandButton {
     }
 
     for (String msg : messages) {
-      ChatUtils.coloredTell(p, msg.replace("%player%", p.getName()));
+      Text.coloredTell(p, msg.replace("%player%", p.getName()));
     }
 
     return true;

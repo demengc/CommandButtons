@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018-2022 Demeng Chen
+ * Copyright (c) 2023 Demeng Chen
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,9 +27,9 @@ package dev.demeng.commandbuttons.menus;
 import dev.demeng.commandbuttons.CommandButtons;
 import dev.demeng.commandbuttons.model.CommandButton;
 import dev.demeng.commandbuttons.util.LocationSerializer;
-import dev.demeng.pluginbase.TimeUtils;
-import dev.demeng.pluginbase.TimeUtils.DurationFormatter;
-import dev.demeng.pluginbase.Validate;
+import dev.demeng.pluginbase.Common;
+import dev.demeng.pluginbase.Time;
+import dev.demeng.pluginbase.Time.DurationFormatter;
 import dev.demeng.pluginbase.input.ChatInputRequest;
 import dev.demeng.pluginbase.item.ItemBuilder;
 import dev.demeng.pluginbase.lib.xseries.XMaterial;
@@ -83,14 +83,14 @@ public class ButtonMenu extends Menu {
     lore.add("&e/cb addLocation " + button.getId() + " on a block to add.");
     lore.add("&e/cb removeLocation " + button.getId() + " on a block to remove.");
 
-    addButton(new MenuButton(10, new ItemBuilder(XMaterial.COMPASS.parseItem())
+    addButton(MenuButton.create(10, ItemBuilder.create(XMaterial.COMPASS.parseItem())
         .name("&cLocations")
         .lore(lore)
         .get(), null));
   }
 
   private void addPermissionButton() {
-    addButton(new MenuButton(12, new ItemBuilder(XMaterial.PAPER.parseItem())
+    addButton(MenuButton.create(12, ItemBuilder.create(XMaterial.PAPER.parseItem())
         .name("&cPermission")
         .addLore("&7The permission required to use the button.")
         .addLore("")
@@ -99,7 +99,7 @@ public class ButtonMenu extends Menu {
         .addLore("&eClick to edit.")
         .get(), event -> {
       p.closeInventory();
-      new ChatInputRequest<>(str -> str)
+      ChatInputRequest.create(str -> str)
           .withInitialMessage("&6Enter a custom permission node, or type &ecancel &6to return.")
           .onExit(() -> new ButtonMenu(i, p, button).open(p))
           .onFinish(permission -> {
@@ -111,7 +111,7 @@ public class ButtonMenu extends Menu {
   }
 
   private void addCooldownTypeButton() {
-    addButton(new MenuButton(14, new ItemBuilder(XMaterial.ICE.parseItem())
+    addButton(MenuButton.create(14, ItemBuilder.create(XMaterial.ICE.parseItem())
         .name("&cCooldown Type")
         .addLore("&7Global cooldowns affect the entire server, while")
         .addLore("&7per-player cooldowns will only apply to the player")
@@ -128,22 +128,22 @@ public class ButtonMenu extends Menu {
   }
 
   private void addCooldownDurationButton() {
-    addButton(new MenuButton(16, new ItemBuilder(XMaterial.CLOCK.parseItem())
+    addButton(MenuButton.create(16, ItemBuilder.create(XMaterial.CLOCK.parseItem())
         .name("&cCooldown Duration")
         .addLore("&7The duration of the cooldown.")
         .addLore("")
         .addLore("&6Current: &f"
-            + TimeUtils.formatDuration(DurationFormatter.CONCISE, button.getCooldownDuration()))
+            + Time.formatDuration(DurationFormatter.CONCISE, button.getCooldownDuration()))
         .addLore("")
         .addLore("&eClick to edit.")
         .get(), event -> {
       p.closeInventory();
-      new ChatInputRequest<>(str -> TimeUtils.parseDuration(str).orElse(null))
+      ChatInputRequest.create(str -> Time.parseSafely(str).orElse(null))
           .withInitialMessage(
               "&6Enter the cooldown duration (ex. &e30s&6), or type &ecancel &6to return.")
           .onExit(() -> new ButtonMenu(i, p, button).open(p))
           .onFinish(duration -> {
-            button.setCooldownDuration(duration);
+            button.setCooldownDuration(duration.toMillis());
             i.getButtonsManager().saveButton(button);
           })
           .start(p);
@@ -151,7 +151,7 @@ public class ButtonMenu extends Menu {
   }
 
   private void addCostButton() {
-    addButton(new MenuButton(28, new ItemBuilder(XMaterial.SUNFLOWER.parseItem())
+    addButton(MenuButton.create(28, ItemBuilder.create(XMaterial.SUNFLOWER.parseItem())
         .name("&cCost")
         .addLore("&7In-game currency withdrawn per use.")
         .addLore("")
@@ -160,7 +160,7 @@ public class ButtonMenu extends Menu {
         .addLore("&eClick to edit.")
         .get(), event -> {
       p.closeInventory();
-      new ChatInputRequest<>(Validate::checkDouble)
+      ChatInputRequest.create(Common::checkDouble)
           .withInitialMessage("&6Enter the cost, or type &ecancel &6to return.")
           .onExit(() -> new ButtonMenu(i, p, button).open(p))
           .onFinish(cost -> {
@@ -193,7 +193,7 @@ public class ButtonMenu extends Menu {
     lore.add("&eShift-click to remove the last command.");
     lore.add("&ePress your drop key to clear all commands.");
 
-    addButton(new MenuButton(30, new ItemBuilder(XMaterial.COMMAND_BLOCK.parseItem())
+    addButton(MenuButton.create(30, ItemBuilder.create(XMaterial.COMMAND_BLOCK.parseItem())
         .name("&cCommands")
         .lore(lore)
         .get(), event -> {
@@ -215,7 +215,7 @@ public class ButtonMenu extends Menu {
       }
 
       p.closeInventory();
-      new ChatInputRequest<>(str -> str)
+      ChatInputRequest.create(str -> str)
           .withInitialMessage("&6Enter a command to add, without the &e/&6."
               + "\n&6Add &a* &6in front to have it executed by console."
               + "\n&6Use &e%player% &6for the player name."
@@ -251,7 +251,7 @@ public class ButtonMenu extends Menu {
     lore.add("&eShift-click to remove the last message.");
     lore.add("&ePress your drop key to clear all messages.");
 
-    addButton(new MenuButton(32, new ItemBuilder(XMaterial.WRITABLE_BOOK.parseItem())
+    addButton(MenuButton.create(32, ItemBuilder.create(XMaterial.WRITABLE_BOOK.parseItem())
         .name("&cMessages")
         .lore(lore)
         .get(), event -> {
@@ -273,7 +273,7 @@ public class ButtonMenu extends Menu {
       }
 
       p.closeInventory();
-      new ChatInputRequest<>(str -> str)
+      ChatInputRequest.create(str -> str)
           .withInitialMessage("&6Enter a message to add."
               + "\n&6Use &e%player% &6for the player name."
               + "\n&6Type &ecancel &6to return.")
@@ -287,7 +287,7 @@ public class ButtonMenu extends Menu {
   }
 
   private void addDeleteButton() {
-    addButton(new MenuButton(34, new ItemBuilder(XMaterial.RED_DYE.parseItem())
+    addButton(MenuButton.create(34, ItemBuilder.create(XMaterial.RED_DYE.parseItem())
         .name("&c&lDelete")
         .addLore("")
         .addLore("&6WARNING: This cannot be reversed!")

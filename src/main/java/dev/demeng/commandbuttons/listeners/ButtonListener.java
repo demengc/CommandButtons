@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018-2022 Demeng Chen
+ * Copyright (c) 2023 Demeng Chen
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,23 +27,25 @@ package dev.demeng.commandbuttons.listeners;
 import dev.demeng.commandbuttons.CommandButtons;
 import dev.demeng.commandbuttons.model.CommandButton;
 import dev.demeng.pluginbase.Common;
+import dev.demeng.pluginbase.Events;
+import dev.demeng.pluginbase.terminable.TerminableConsumer;
+import dev.demeng.pluginbase.terminable.module.TerminableModule;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The listener responsible for listening for command button interactions.
  */
 @RequiredArgsConstructor
-public class ButtonListener implements Listener {
+public class ButtonListener implements TerminableModule {
 
   // The button interaction timeout, in milliseconds.
   private static final int TIMEOUT = 500;
@@ -51,49 +53,53 @@ public class ButtonListener implements Listener {
   private final CommandButtons i;
   private final Map<Player, Long> lastInteracted = new HashMap<>();
 
-  @EventHandler(priority = EventPriority.HIGH)
-  public void onPlayerInteract(PlayerInteractEvent e) {
+  @Override
+  public void setup(@NotNull TerminableConsumer consumer) {
 
-    if (e.getClickedBlock() == null
-        || (e.getAction() != Action.RIGHT_CLICK_BLOCK && e.getAction() != Action.PHYSICAL)
-        || (Common.isServerVersionAtLeast(9) && e.getHand() == EquipmentSlot.OFF_HAND)) {
-      return;
-    }
+    Events.subscribe(PlayerInteractEvent.class, EventPriority.HIGH)
+        .handler(e -> {
+          if (e.getClickedBlock() == null
+              || (e.getAction() != Action.RIGHT_CLICK_BLOCK && e.getAction() != Action.PHYSICAL)
+              || (Common.isServerVersionAtLeast(9) && e.getHand() == EquipmentSlot.OFF_HAND)) {
+            return;
+          }
 
-    final CommandButton button = i.getButtonsManager()
-        .getButtonByLocation(e.getClickedBlock().getLocation());
+          final CommandButton button = i.getButtonsManager()
+              .getButtonByLocation(e.getClickedBlock().getLocation());
 
-    if (button == null) {
-      return;
-    }
+          if (button == null) {
+            return;
+          }
 
-    if (lastInteracted.getOrDefault(e.getPlayer(), 0L) + TIMEOUT >= System.currentTimeMillis()) {
-      e.setCancelled(true);
-      return;
-    }
+          if (lastInteracted.getOrDefault(e.getPlayer(), 0L) + TIMEOUT
+              >= System.currentTimeMillis()) {
+            e.setCancelled(true);
+            return;
+          }
 
-    lastInteracted.put(e.getPlayer(), System.currentTimeMillis());
+          lastInteracted.put(e.getPlayer(), System.currentTimeMillis());
 
-    final boolean success = button.use(e.getPlayer());
+          final boolean success = button.use(e.getPlayer());
 
-    // If the command button use was successful.
-    if (success) {
+          // If the command button use was successful.
+          if (success) {
 
-      // Cancel interaction if material is on the "disable interaction" list.
-      if (i.getSettings().getStringList("disable-interaction").stream()
-          .anyMatch(str -> str.equalsIgnoreCase(e.getClickedBlock().getType().name()))) {
-        e.setCancelled(true);
-      }
+            // Cancel interaction if material is on the "disable interaction" list.
+            if (i.getSettings().getStringList("disable-interaction").stream()
+                .anyMatch(str -> str.equalsIgnoreCase(e.getClickedBlock().getType().name()))) {
+              e.setCancelled(true);
+            }
 
-      return;
-    }
+            return;
+          }
 
-    // Cancel interaction if unsuccessful.
-    e.setCancelled(true);
-  }
+          // Cancel interaction if unsuccessful.
+          e.setCancelled(true);
+        })
+        .bindWith(consumer);
 
-  @EventHandler(priority = EventPriority.MONITOR)
-  public void onPlayerQuit(PlayerQuitEvent e) {
-    lastInteracted.remove(e.getPlayer());
+    Events.subscribe(PlayerQuitEvent.class, EventPriority.MONITOR)
+        .handler(e -> lastInteracted.remove(e.getPlayer()))
+        .bindWith(consumer);
   }
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018-2022 Demeng Chen
+ * Copyright (c) 2023 Demeng Chen
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
 
 package dev.demeng.commandbuttons.util;
 
-import dev.demeng.pluginbase.Validate;
+import dev.demeng.pluginbase.Common;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -56,9 +56,9 @@ public final class LocationSerializer {
     }
 
     final World world = Bukkit.getWorld(split[0]);
-    final Integer x = Validate.checkInt(split[1]);
-    final Integer y = Validate.checkInt(split[2]);
-    final Integer z = Validate.checkInt(split[3]);
+    final Integer x = Common.checkInt(split[1]);
+    final Integer y = Common.checkInt(split[2]);
+    final Integer z = Common.checkInt(split[3]);
 
     if (world == null || x == null || y == null || z == null) {
       throw new IllegalArgumentException("Corrupt location: " + str);
