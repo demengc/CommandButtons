@@ -50,7 +50,7 @@
                 </relocation>
                 <relocation>
                   <pattern>revxrsal.commands</pattern>
-                  <shadedPattern>dev.demeng.ultrarepair.shaded.pluginbase.commands</shadedPattern>
+                  <shadedPattern>dev.demeng.commandbuttons.shaded.pluginbase.commands</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.bstats</pattern>
