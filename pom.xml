@@ -49,6 +49,10 @@
                   <shadedPattern>dev.demeng.commandbuttons.shaded.pluginbase</shadedPattern>
                 </relocation>
                 <relocation>
+                  <pattern>revxrsal.commands</pattern>
+                  <shadedPattern>dev.demeng.ultrarepair.shaded.pluginbase.commands</shadedPattern>
+                </relocation>
+                <relocation>
                   <pattern>org.bstats</pattern>
                   <shadedPattern>dev.demeng.commandbuttons.shaded.bstats</shadedPattern>
                 </relocation>
