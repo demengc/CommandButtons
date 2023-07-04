@@ -147,7 +147,7 @@ public class CommandButton {
     final FileConfiguration messagesConfig = CommandButtons.getInstance().getMessages();
 
     if (!permission.equalsIgnoreCase("none") && !p.hasPermission(permission)) {
-      Text.tell(p, Objects.requireNonNull(messagesConfig.getString("insufficient-permission"))
+      Text.tell(p, Objects.requireNonNull(messagesConfig.getString("no-permission"))
           .replace("%permission%", permission));
       return false;
     }
