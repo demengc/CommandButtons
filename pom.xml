@@ -6,7 +6,7 @@
 
   <groupId>dev.demeng</groupId>
   <artifactId>commandbuttons</artifactId>
-  <version>5.2.3</version>
+  <version>5.2.4</version>
   <packaging>jar</packaging>
 
   <name>CommandButtons</name>
@@ -85,19 +85,19 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.20.2-R0.1-SNAPSHOT</version>
+      <version>1.20.4-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.github.Demeng7215.PluginBase</groupId>
       <artifactId>pluginbase-core</artifactId>
-      <version>c1976d0d8b</version>
+      <version>ef4b47ed8d</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.github.Demeng7215</groupId>
       <artifactId>PluginBase-Lamp</artifactId>
-      <version>249f97664c</version>
+      <version>18ffd36dab</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
