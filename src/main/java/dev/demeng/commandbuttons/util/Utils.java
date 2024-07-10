@@ -25,8 +25,14 @@
 package dev.demeng.commandbuttons.util;
 
 import dev.demeng.pluginbase.Common;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.ItemFrame;
+import org.bukkit.entity.Player;
+
+import java.util.List;
 
 /**
  * General utilities.
@@ -42,5 +48,38 @@ public class Utils {
   public static boolean isAir(Block block) {
     return block == null || block.getType() == Material.AIR
         || (Common.isServerVersionAtLeast(13) && block.getType().isAir());
+  }
+
+  /**
+   * Gets the Location of the BlockFace of the block the player is currently targeting.
+   *
+   * @param player the player whose targeted blocks BlockFace is to be checked.
+   * @return the Location of the BlockFace of the targeted block, or null if the targeted block is non-occluding.
+   */
+  public static Location getBlockFaceLocation(Player player) {
+    List<Block> lastTwoTargetBlocks = player.getLastTwoTargetBlocks(null, 100);
+    if (lastTwoTargetBlocks.size() != 2 || !lastTwoTargetBlocks.get(1).getType().isOccluding()) return null;
+    Block targetBlock = lastTwoTargetBlocks.get(1);
+    Block adjacentBlock = lastTwoTargetBlocks.get(0);
+
+    return adjacentBlock.getLocation();
+  }
+
+  /**
+   * Checks if the provided block has an item frame occupying it.
+   *
+   * @param location the location to be checked
+   * @return true or false
+   */
+  public static Boolean isItemFrame(Location location) {
+    for (Entity e : location.getChunk().getEntities()) {
+      if (e instanceof ItemFrame
+              && (e.getLocation().getBlockX() == location.getBlockX())
+              && (e.getLocation().getBlockY() == location.getBlockY())
+              && (e.getLocation().getBlockZ() == location.getBlockZ())) {
+        return true;
+      }
+    }
+    return false;
   }
 }

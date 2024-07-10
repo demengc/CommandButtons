@@ -27,6 +27,7 @@ package dev.demeng.commandbuttons.menus;
 import dev.demeng.commandbuttons.CommandButtons;
 import dev.demeng.commandbuttons.model.CommandButton;
 import dev.demeng.commandbuttons.util.LocationSerializer;
+import dev.demeng.commandbuttons.util.Utils;
 import dev.demeng.pluginbase.Common;
 import dev.demeng.pluginbase.Time;
 import dev.demeng.pluginbase.Time.DurationFormatter;
@@ -75,8 +76,10 @@ public class ButtonMenu extends Menu {
     lore.add("&6Current:");
 
     for (Location loc : button.getLocations()) {
+      final String blockName = (Utils.isItemFrame(loc)) ? "Item Frame" : loc.getBlock().getType().name();
+
       lore.add("&f- " + LocationSerializer.serialize(loc)
-          + " (" + loc.getBlock().getType().name() + ")");
+          + " (" + blockName + ")");
     }
 
     lore.add("");
