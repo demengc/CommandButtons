@@ -119,9 +119,17 @@ public class CommandButtonsCmd {
       return;
     }
 
+    // Test for item frame
+    Location finalLocation = targetBlock.getLocation();
+    final Location blockFaceLocation = Utils.getBlockFaceLocation(p);
+
+    if (blockFaceLocation != null && Utils.isItemFrame(blockFaceLocation)) {
+      finalLocation = blockFaceLocation;
+    }
+
     final CommandButton button = new CommandButton(
         id,
-        new ArrayList<>(Collections.singletonList(targetBlock.getLocation())),
+        new ArrayList<>(Collections.singletonList(finalLocation)),
         "none",
         true,
         3000L,

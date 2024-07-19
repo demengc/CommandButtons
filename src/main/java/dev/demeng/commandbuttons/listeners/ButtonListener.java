@@ -36,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -55,6 +56,48 @@ public class ButtonListener implements TerminableModule {
 
   @Override
   public void setup(@NotNull TerminableConsumer consumer) {
+
+    Events.subscribe(PlayerInteractEntityEvent.class, EventPriority.HIGH)
+        .handler(e -> {
+          if (e.getRightClicked() == null
+              || (Common.isServerVersionAtLeast(9) && e.getHand() == EquipmentSlot.OFF_HAND)) {
+            return;
+          }
+
+          final CommandButton button = i.getButtonsManager()
+              .getButtonByLocation(e.getRightClicked().getLocation());
+
+          if (button == null) {
+            return;
+          }
+
+          if (lastInteracted.getOrDefault(e.getPlayer(), 0L) + TIMEOUT
+              >= System.currentTimeMillis()) {
+            e.setCancelled(true);
+            return;
+          }
+
+          lastInteracted.put(e.getPlayer(), System.currentTimeMillis());
+
+          final boolean success = button.use(e.getPlayer());
+
+          // If the command button use was successful.
+          if (success) {
+
+            // Cancel interaction if material is on the "disable interaction" list.
+            if (i.getSettings().getStringList("disable-interaction").stream()
+                .anyMatch(str -> str.equalsIgnoreCase(e.getRightClicked().getType().name()))) {
+              e.setCancelled(true);
+            }
+
+            return;
+          }
+
+          // Cancel interaction if unsuccessful.
+          e.setCancelled(true);
+        })
+        .bindWith(consumer);
+
 
     Events.subscribe(PlayerInteractEvent.class, EventPriority.HIGH)
         .handler(e -> {

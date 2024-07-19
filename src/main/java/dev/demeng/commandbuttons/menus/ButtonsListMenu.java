@@ -92,6 +92,9 @@ public class ButtonsListMenu extends PagedMenu {
         if (!Utils.isAir(loc.getBlock())) {
           stack = new ItemStack(loc.getBlock().getType());
           break;
+        } else if (Utils.isItemFrame(loc)) {
+          stack = new ItemStack(Material.ITEM_FRAME);
+          break;
         }
       }
 
@@ -104,8 +107,10 @@ public class ButtonsListMenu extends PagedMenu {
       lore.add("&6Locations");
 
       for (Location loc : button.getLocations()) {
+        final String blockName = (Utils.isItemFrame(loc)) ? "Item Frame" : loc.getBlock().getType().name();
+
         lore.add("&f- " + LocationSerializer.serialize(loc)
-            + " (" + loc.getBlock().getType().name() + ")");
+            + " (" + blockName + ")");
       }
 
       lore.add("");
