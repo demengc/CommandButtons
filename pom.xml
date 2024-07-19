@@ -6,7 +6,7 @@
 
   <groupId>dev.demeng</groupId>
   <artifactId>commandbuttons</artifactId>
-  <version>5.2.8</version>
+  <version>5.2.9</version>
   <packaging>jar</packaging>
 
   <name>CommandButtons</name>
@@ -91,7 +91,7 @@
     <dependency>
       <groupId>com.github.demengc.PluginBase</groupId>
       <artifactId>pluginbase-core</artifactId>
-      <version>a528639b55</version>
+      <version>2cf103496a</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
