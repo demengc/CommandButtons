@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -89,14 +90,23 @@ public class ButtonsListMenu extends PagedMenu {
       ItemStack stack = new ItemStack(Material.BARRIER);
 
       for (Location loc : button.getLocations()) {
-        if (!Utils.isAir(loc.getBlock())) {
-          stack = new ItemStack(loc.getBlock().getType());
-          break;
+        if (Utils.isAir(loc.getBlock())) {
+          continue;
         }
-      }
 
-      if (Common.getServerMajorVersion() < 13 && stack.getType().name().equals("SKULL")) {
-        stack = new ItemStack(Material.valueOf("SKULL_ITEM"), 1, (short) 3);
+        final Block block = loc.getBlock();
+
+        if (Common.isServerVersionAtLeast(12) && block.getType().isItem()) {
+          stack = new ItemStack(block.getType());
+          break;
+        } else {
+          final ItemStack drop = block.getDrops().stream().findFirst().orElse(null);
+
+          if (drop != null && !Utils.isAir(drop)) {
+            stack = drop;
+            break;
+          }
+        }
       }
 
       final List<String> lore = new ArrayList<>();

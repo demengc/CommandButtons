@@ -6,7 +6,7 @@
 
   <groupId>dev.demeng</groupId>
   <artifactId>commandbuttons</artifactId>
-  <version>5.2.9</version>
+  <version>5.2.10</version>
   <packaging>jar</packaging>
 
   <name>CommandButtons</name>

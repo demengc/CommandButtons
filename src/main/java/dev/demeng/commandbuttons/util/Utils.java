@@ -25,13 +25,17 @@
 package dev.demeng.commandbuttons.util;
 
 import dev.demeng.pluginbase.Common;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * General utilities.
  */
-public class Utils {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class Utils {
 
   /**
    * Checks if the provided block is air.
@@ -40,7 +44,21 @@ public class Utils {
    * @return True if air, false otherwise
    */
   public static boolean isAir(Block block) {
-    return block == null || block.getType() == Material.AIR
-        || (Common.isServerVersionAtLeast(13) && block.getType().isAir());
+    return block == null || isAir(block.getType());
+  }
+
+  /**
+   * Checks if the provided item is air.
+   *
+   * @param stack The item stack to check
+   * @return True if air, false otherwise
+   */
+  public static boolean isAir(ItemStack stack) {
+    return stack == null || isAir(stack.getType());
+  }
+
+  private static boolean isAir(Material material) {
+    return material == null || material == Material.AIR
+        || (Common.isServerVersionAtLeast(13) && material.isAir());
   }
 }
