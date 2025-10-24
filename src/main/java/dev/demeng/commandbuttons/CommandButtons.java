@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Demeng Chen
+ * Copyright (c) 2025 Demeng Chen
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +33,8 @@ import dev.demeng.pluginbase.Schedulers;
 import dev.demeng.pluginbase.UpdateChecker;
 import dev.demeng.pluginbase.UpdateChecker.Result;
 import dev.demeng.pluginbase.YamlConfig;
+import dev.demeng.pluginbase.lib.lamp.Lamp;
+import dev.demeng.pluginbase.lib.lamp.bukkit.actor.BukkitCommandActor;
 import dev.demeng.pluginbase.locale.reader.ConfigLocaleReader;
 import dev.demeng.pluginbase.plugin.BasePlugin;
 import dev.demeng.pluginbase.text.Text;
@@ -46,14 +48,13 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import revxrsal.commands.bukkit.BukkitCommandHandler;
 
 /**
  * The main class for CommandButtons.
  */
 public final class CommandButtons extends BasePlugin {
 
-  @Getter @Setter(AccessLevel.PACKAGE) private static CommandButtons instance;
+  @Getter @Setter(AccessLevel.PRIVATE) private static CommandButtons instance;
 
   // Managers for the corresponding configuration file.
   @Getter private YamlConfig settingsFile;
@@ -62,7 +63,7 @@ public final class CommandButtons extends BasePlugin {
 
   // Versions of the corresponding configuration file.
   private static final int SETTINGS_VERSION = 1;
-  private static final int MESSAGES_VERSION = 3;
+  private static final int MESSAGES_VERSION = 4;
   private static final int DATA_VERSION = 2;
 
   @Getter private ButtonsManager buttonsManager;
@@ -100,8 +101,8 @@ public final class CommandButtons extends BasePlugin {
     }
 
     getLogger().info("Registering commands...");
-    final BukkitCommandHandler commandHandler = BukkitCommandHandler.create(this);
-    commandHandler.register(new CommandButtonsCmd(this));
+    final Lamp<BukkitCommandActor> lamp = createCommandHandler();
+    lamp.register(new CommandButtonsCmd(this));
 
     getLogger().info("Registering listeners...");
     bindModule(new ButtonListener(this));
