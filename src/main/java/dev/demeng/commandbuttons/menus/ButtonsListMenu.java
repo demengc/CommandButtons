@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Demeng Chen
+ * Copyright (c) 2025 Demeng Chen
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -84,7 +84,7 @@ public class ButtonsListMenu extends PagedMenu {
 
     final List<MenuButton> buttons = new ArrayList<>();
 
-    for (CommandButton button : i.getButtonsManager().getButtons()) {
+    for (CommandButton button : i.getButtonsManager().getButtons().values()) {
 
       // The material of the block at the first non-air location, or a barrier is not applicable.
       ItemStack stack = new ItemStack(Material.BARRIER);

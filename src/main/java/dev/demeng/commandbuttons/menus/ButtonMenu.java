@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Demeng Chen
+ * Copyright (c) 2025 Demeng Chen
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -100,6 +100,11 @@ public class ButtonMenu extends Menu {
         .get(), event -> {
       p.closeInventory();
       ChatInputRequest.create(str -> str)
+          .withExitValue(i.getMessages().getString("input-requests.exit-value"))
+          .withTitle(i.getMessages().getString("input-requests.title"))
+          .withSubtitle(i.getMessages().getString("input-requests.subtitle"))
+          .withRetryMessage(i.getMessages().getString("input-requests.retry-message"))
+          .withTimeoutMessage(i.getMessages().getString("input-requests.timeout-message"))
           .withInitialMessage("&6Enter a custom permission node, or type &ecancel &6to return.")
           .onExit(() -> new ButtonMenu(i, p, button).open(p))
           .onFinish(permission -> {
@@ -139,6 +144,11 @@ public class ButtonMenu extends Menu {
         .get(), event -> {
       p.closeInventory();
       ChatInputRequest.create(str -> Time.parseSafely(str).orElse(null))
+          .withExitValue(i.getMessages().getString("input-requests.exit-value"))
+          .withTitle(i.getMessages().getString("input-requests.title"))
+          .withSubtitle(i.getMessages().getString("input-requests.subtitle"))
+          .withRetryMessage(i.getMessages().getString("input-requests.retry-message"))
+          .withTimeoutMessage(i.getMessages().getString("input-requests.timeout-message"))
           .withInitialMessage(
               "&6Enter the cooldown duration (ex. &e30s&6), or type &ecancel &6to return.")
           .onExit(() -> new ButtonMenu(i, p, button).open(p))
@@ -161,6 +171,11 @@ public class ButtonMenu extends Menu {
         .get(), event -> {
       p.closeInventory();
       ChatInputRequest.create(Common::checkDouble)
+          .withExitValue(i.getMessages().getString("input-requests.exit-value"))
+          .withTitle(i.getMessages().getString("input-requests.title"))
+          .withSubtitle(i.getMessages().getString("input-requests.subtitle"))
+          .withRetryMessage(i.getMessages().getString("input-requests.retry-message"))
+          .withTimeoutMessage(i.getMessages().getString("input-requests.timeout-message"))
           .withInitialMessage("&6Enter the cost, or type &ecancel &6to return.")
           .onExit(() -> new ButtonMenu(i, p, button).open(p))
           .onFinish(cost -> {
@@ -216,6 +231,11 @@ public class ButtonMenu extends Menu {
 
       p.closeInventory();
       ChatInputRequest.create(str -> str)
+          .withExitValue(i.getMessages().getString("input-requests.exit-value"))
+          .withTitle(i.getMessages().getString("input-requests.title"))
+          .withSubtitle(i.getMessages().getString("input-requests.subtitle"))
+          .withRetryMessage(i.getMessages().getString("input-requests.retry-message"))
+          .withTimeoutMessage(i.getMessages().getString("input-requests.timeout-message"))
           .withInitialMessage("&6Enter a command to add, without the &e/&6."
               + "\n&6Add &a* &6in front to have it executed by console."
               + "\n&6Use &e%player% &6for the player name."
@@ -274,6 +294,11 @@ public class ButtonMenu extends Menu {
 
       p.closeInventory();
       ChatInputRequest.create(str -> str)
+          .withExitValue(i.getMessages().getString("input-requests.exit-value"))
+          .withTitle(i.getMessages().getString("input-requests.title"))
+          .withSubtitle(i.getMessages().getString("input-requests.subtitle"))
+          .withRetryMessage(i.getMessages().getString("input-requests.retry-message"))
+          .withTimeoutMessage(i.getMessages().getString("input-requests.timeout-message"))
           .withInitialMessage("&6Enter a message to add."
               + "\n&6Use &e%player% &6for the player name."
               + "\n&6Type &ecancel &6to return.")

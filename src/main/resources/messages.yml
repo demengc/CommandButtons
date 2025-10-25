@@ -10,77 +10,205 @@
 # Support: https://demeng.dev/discord
 # -----------------------------------------------------------------------------
 
-config-version: 3
+config-version: 4
 
 # The prefix that will be displayed in front of most messages.
-prefix: "&8[&4CB&8] &r"
-
-# General command-related messages.
-commands.invalid-subcommand: "&7Invalid subcommand: &b{0}"
-commands.no-permission: "&7You do not have permission to execute this command."
-commands.error-occurred: "&7An error occurred while executing this command."
-commands.missing-argument: "&6You must specify a value for the &e{0}&6."
-commands.must-be-player: "&7You must be a player to use this command!"
-
-# If the command sender does not provide a valid command button ID.
-invalid-button: "&6There are no command buttons with that ID."
+prefix: "&8[&4&lCB&8] &r"
 
 # When the list of commands are requested.
 help:
-  - "&c&lList of Commands for CommandButtons:&r"
-  - "&6/cb &8- &6The main command for CommandButtons."
-  - "&6/cb help &8- &6Displays the list of commands."
-  - "&6/cb reload &8- &6Reloads configuration files."
-  - "&6/cb create <id>&8- &6Creates a new command button."
-  - "&6/cb editor [id]&8- &6Opens the buttons editor."
-  - "&6/cb addLocation <id>&8- &6Adds a button location."
-  - "&6/cb removeLocation <id>&8- &6Removes a button location."
+  - ""
+  - "&c&lCommandButtons &8&l| &7Available Commands"
+  - ""
+  - " &8> &f/cb info &8- &7Display plugin info"
+  - " &8> &f/cb help &8- &7Display this help menu"
+  - " &8> &f/cb reload &8- &7Reload configuration"
+  - " &8> &f/cb create &e<id> &8- &7Create new button"
+  - " &8> &f/cb editor &e[id] &8- &7Open button editor"
+  - " &8> &f/cb addLocation &e<id> &8- &7Add button location"
+  - " &8> &f/cb removeLocation &e<id> &8- &7Remove button location"
+  - ""
 
 # When configuration files have been successfully reloaded.
-reloaded: "&6Successfully reloaded configuration files."
+reloaded: "&aSuccessfully reloaded configuration files."
 
 # If the player is trying to create a command button but isn't looking at any block.
-no-target-block: "&6No target block found... look at the block you want to set as a command button and try again."
+no-target-block: "&cNo target block found. Look at the block you want to set as a command button and try again."
 
 # If a player is trying to create a command button and the ID specified already exists.
 # %id% - The provided ID
-id-already-exists: "&6A button with ID &e%id% &6already exists. To add a new location to the button, use &e/cb addLocation&6."
+id-already-exists: "&cA button with ID &e%id% &calready exists. To add a new location, use &e/cb addLocation&c."
 
 # If a player is trying to create a command button and the location is already a command button.
-location-already-exists: "&6This block is already a command button! Use &e/cb removeLocation &6to remove it."
+location-already-exists: "&cThis block is already a command button! Use &e/cb removeLocation &cto remove it."
 
 # When a new command button is successfully created.
 # %id% - The command button ID
-created: "&6The block you're looking at is now a command button! Use &e/cb edit %id% &6to edit it."
+created: "&aThe block you're looking at is now a command button! Use &f/cb edit %id% &ato edit it."
 
 # If the player attempts to use the button before the cooldown is over.
 # %remaining% - The remaining duration of the cooldown
-cooldown-active: "&6This button is on cooldown! Please wait &e%remaining%&6."
-
-# If the button user does not have the required permission.
-# Use %permission% for the required permission.
-no-permission: "&6You must have the &e%permission% &6permission to do that!"
+cooldown-active: "&cThis button is on cooldown! Please wait &e%remaining%&c."
 
 # If the player does not have enough money to use the command button.
 # %cost% - The cost of the button
-insufficient-funds: "&6You need &e$%cost% &6to do that!"
+insufficient-funds: "&cYou need &e$%cost% &cto do that!"
 
 # When a player adds a location to a command button.
 # %id% - The ID of the button
-location-added: "&6Added the block you're looking at to button &e%id%&6."
+location-added: "&aAdded the block you're looking at to button &f%id%&a."
 
 # When a player removes a location from a command button.
 # %id% - The ID of the button
-location-removed: "&6Removed the block you're looking at from button &e%id%&6."
+location-removed: "&aRemoved the block you're looking at from button &f%id%&a."
 
 # If a player tries to remove a location that is not a part of the command button.
 # %id% - The ID of the button
-location-not-exists: "&6This location is not added to button &e%id%&6."
+location-not-exists: "&cThis location is not added to button &e%id%&c."
 
 # Input Requests
 input-requests:
-  exit-value: cancel
-  default-title: "&6Awaiting Input"
-  default-subtitle: "&fSee chat for details."
-  default-retry-message: "&6Invalid input! Please try again."
-  default-timeout-message: "&6You did not respond in time!"
+  exit-value: "cancel"
+  title: "&6Awaiting Input"
+  subtitle: "&fSee chat for details."
+  retry-message: "&cInvalid input! Please try again."
+  timeout-message: "&cYou did not respond in time!"
+
+# Generic error messages for commands. Note that not all messages are in use.
+commands:
+  # Invalid player input
+  # Placeholder: {0} = player input
+  invalid-player: "&cInvalid player: &e{0}&c."
+
+  # Invalid world input
+  # Placeholder: {0} = world input
+  invalid-world: "&cInvalid world: &e{0}&c."
+
+  # Missing location parameter (x, y, or z coordinate)
+  # Placeholder: {0} = axis name (x, y, or z)
+  missing-location-parameter: "&cExpected &e{0}&c."
+
+  # Sender is not console
+  sender-not-console: "&cYou must be the console to execute this command!"
+
+  # Sender is not a player
+  sender-not-player: "&cYou must be a player to execute this command!"
+
+  # Malformed entity selector
+  # Placeholders: {0} = input, {1} = error message
+  malformed-entity-selector: "&cMalformed entity selector: &e{0}&c. Error: &e{1}"
+
+  # Entity selector targets non-player entities
+  # Placeholder: {0} = selector input
+  non-player-entities: "&cEntity selector &e{0} &cmust only target players."
+
+  # Entity selector returned more than one entity when only one was expected
+  more-than-one-entity: "&cEntity selector must target only one entity."
+
+  # Entity selector returned no entities
+  empty-entity-selector: "&cNo entities were found."
+
+  # Invalid enum value
+  # Placeholder: {0} = invalid input
+  enum-not-found: "&cInvalid value: &e{0}&c."
+
+  # Expected a literal but got something else
+  # Placeholders: {0} = expected node name, {1} = actual input
+  expected-literal: "&cExpected &e{0}&c, found &e{1}&c."
+
+  input-parse:
+    # Invalid escape character in input
+    invalid-escape: "&cInvalid input. Use &e\\\\\\\\ &cto include a backslash."
+
+    # Unclosed quote in input
+    unclosed-quote: "&cUnclosed quote. Make sure to close all quotes."
+
+    # Expected whitespace after argument
+    expected-whitespace: "&cUnexpected text after argument."
+
+  invalid-list-size:
+    # List size too small
+    # Placeholders: {0} = minimum size, {1} = parameter name
+    too-small: "&cYou must input at least &e{0} &centries for &e{1}&c."
+
+    # List size too large
+    # Placeholders: {0} = maximum size, {1} = parameter name
+    too-large: "&cYou must input at most &e{0} &centries for &e{1}&c."
+
+  invalid-string-size:
+    # String too short
+    # Placeholders: {0} = parameter name, {1} = minimum length
+    too-small: "&cParameter &e{0} &cmust be at least &e{1} &ccharacters long."
+
+    # String too long
+    # Placeholders: {0} = parameter name, {1} = maximum length
+    too-large: "&cParameter &e{0} &ccan be at most &e{1} &ccharacters long."
+
+  # Invalid boolean value
+  # Placeholder: {0} = invalid input
+  invalid-boolean: "&cExpected &etrue &cor &efalse&c, found &e{0}&c."
+
+  # Invalid decimal/double value
+  # Placeholder: {0} = invalid input
+  invalid-decimal: "&cInvalid number: &e{0}&c."
+
+  # Invalid integer value
+  # Placeholder: {0} = invalid input
+  invalid-integer: "&cInvalid integer: &e{0}&c."
+
+  # Invalid UUID format
+  # Placeholder: {0} = invalid input
+  invalid-uuid: "&cInvalid UUID: &e{0}&c."
+
+  # Missing required argument
+  # Placeholders: {0} = parameter name, {1} = command usage
+  missing-argument: "&cRequired parameter is missing: &e{0}&c. Usage: &e/{1}&c."
+
+  # No permission to execute command
+  no-permission: "&cYou do not have permission to execute this command!"
+
+  number-not-in-range:
+    # Number too small
+    # Placeholders: {0} = parameter name, {1} = input value, {2} = minimum
+    too-small: "&c{0} too small &e({1})&c. Must be at least &e{2}&c."
+
+    # Number too large
+    # Placeholders: {0} = parameter name, {1} = input value, {2} = maximum
+    too-large: "&c{0} too large &e({1})&c. Must be at most &e{2}&c."
+
+  invalid-help-page:
+    # Invalid help page - only one page exists
+    # Placeholder: {0} = requested page number
+    single: "&cInvalid help page: &e{0}&c. Must be 1."
+
+    # Invalid help page - multiple pages exist
+    # Placeholders: {0} = requested page, {1} = total pages
+    multiple: "&cInvalid help page: &e{0}&c. Must be between &e1 &cand &e{1}&c."
+
+  # Unknown command with suggestion
+  # {0} = user input, {1} = suggested command
+  failed-resolve: "&cUnknown command: &e/{0}&c. Did you mean &e/{1}&c?"
+
+  # Unknown/non-existent command
+  # Placeholder: {0} = command input
+  unknown-command: "&cUnknown command: &e{0}&c."
+
+  # Value not in allowed list
+  # Placeholders: {0} = invalid value, {1} = allowed values (comma-separated)
+  value-not-allowed: "&cInvalid value: &e{0}&c. Allowed: &e{1}&c."
+
+  # Internal error occurred during command execution
+  internal-error: "&cAn error occurred while executing this command. Please contact an administrator."
+
+  unknown-parameter:
+    # Unknown shorthand flag (single character)
+    # Placeholder: {0} = flag name
+    shorthand: "&cUnknown shorthand flag: &e{0}&c."
+
+    # Unknown flag (full name)
+    # Placeholder: {0} = flag name
+    flag: "&cUnknown flag: &e{0}&c."
+
+  # Command is on cooldown
+  # Placeholder: {0} = time remaining (formatted duration)
+  cooldown: "&cYou must wait &e{0} &cbefore using this command again."

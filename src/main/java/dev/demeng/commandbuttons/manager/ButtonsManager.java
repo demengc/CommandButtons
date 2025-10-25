@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Demeng Chen
+ * Copyright (c) 2025 Demeng Chen
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,11 +29,12 @@ import dev.demeng.commandbuttons.model.CommandButton;
 import dev.demeng.commandbuttons.util.LocationSerializer;
 import dev.demeng.pluginbase.Common;
 import java.io.IOException;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -71,11 +72,11 @@ public class ButtonsManager {
   /**
    * Gets the command button with the specified ID.
    *
-   * @param id The ID of the button
-   * @return The command button with the given ID
+   * @param id The ID
+   * @return The command button with the ID, or empty
    */
-  public CommandButton getButton(String id) {
-    return buttons.get(id);
+  public Optional<CommandButton> getButton(String id) {
+    return Optional.ofNullable(buttons.get(id));
   }
 
   /**
@@ -156,11 +157,11 @@ public class ButtonsManager {
   }
 
   /**
-   * Gets all registered command buttons.
+   * Gets an unmodifiable map of all registered buttons.
    *
-   * @return The collection of all command buttons
+   * @return An unmodifiable map of all registered buttons
    */
-  public Collection<CommandButton> getButtons() {
-    return buttons.values();
+  public Map<String, CommandButton> getButtons() {
+    return Collections.unmodifiableMap(buttons);
   }
 }

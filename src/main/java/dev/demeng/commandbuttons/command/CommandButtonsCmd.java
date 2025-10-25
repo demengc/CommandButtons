@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Demeng Chen
+ * Copyright (c) 2025 Demeng Chen
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package dev.demeng.commandbuttons.commands;
+package dev.demeng.commandbuttons.command;
 
 import dev.demeng.commandbuttons.CommandButtons;
 import dev.demeng.commandbuttons.menus.ButtonMenu;
@@ -30,6 +30,12 @@ import dev.demeng.commandbuttons.menus.ButtonsListMenu;
 import dev.demeng.commandbuttons.model.CommandButton;
 import dev.demeng.commandbuttons.util.Utils;
 import dev.demeng.pluginbase.Common;
+import dev.demeng.pluginbase.lib.lamp.annotation.Command;
+import dev.demeng.pluginbase.lib.lamp.annotation.Description;
+import dev.demeng.pluginbase.lib.lamp.annotation.Optional;
+import dev.demeng.pluginbase.lib.lamp.annotation.Subcommand;
+import dev.demeng.pluginbase.lib.lamp.annotation.Usage;
+import dev.demeng.pluginbase.lib.lamp.bukkit.annotation.CommandPermission;
 import dev.demeng.pluginbase.text.Text;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,13 +48,6 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
-import revxrsal.commands.annotation.Command;
-import revxrsal.commands.annotation.DefaultFor;
-import revxrsal.commands.annotation.Description;
-import revxrsal.commands.annotation.Optional;
-import revxrsal.commands.annotation.Subcommand;
-import revxrsal.commands.annotation.Usage;
-import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 /**
  * The main command of CommandButtons.
@@ -59,11 +58,14 @@ public class CommandButtonsCmd {
 
   private final CommandButtons i;
 
-  @DefaultFor({"commandbuttons", "cb"})
+  @Subcommand("info")
   @Description("Displays information for CommandButtons.")
   public void runDefault(CommandSender sender) {
-    Text.coloredTell(sender, "&c&lRunning CommandButtons v" + Common.getVersion() + " by Demeng.");
-    Text.coloredTell(sender, "&6Link: &ehttps://spigotmc.org/resources/60991/");
+    Text.coloredTell(sender, "");
+    Text.coloredTell(sender, "&c&lCommandButtons &fv" + Common.getVersion() + " &7by Demeng");
+    Text.coloredTell(sender, "&8> &7Use &f/cb help &7for a list of commands");
+    Text.coloredTell(sender, "&8> &7Link: &fhttps://spigotmc.org/resources/60991/");
+    Text.coloredTell(sender, "");
   }
 
   @Subcommand("help")
@@ -74,7 +76,7 @@ public class CommandButtonsCmd {
     }
   }
 
-  @Subcommand({"reload", "rl"})
+  @Subcommand({"reload"})
   @Description("Reloads configuration files.")
   @CommandPermission("commandbuttons.reload")
   public void runReload(CommandSender sender) {
@@ -96,7 +98,7 @@ public class CommandButtonsCmd {
 
   @Subcommand("create")
   @Description("Creates a new command button.")
-  @Usage("/cb create <id>")
+  @Usage("cb create <buttonId>")
   @CommandPermission("commandbuttons.create")
   public void runCreate(Player p, String id) {
 
@@ -107,7 +109,7 @@ public class CommandButtonsCmd {
       return;
     }
 
-    if (i.getButtonsManager().getButton(id) != null) {
+    if (i.getButtonsManager().getButton(id).isPresent()) {
       Text.tell(p, Objects.requireNonNull(
           i.getMessages().getString("id-already-exists")).replace("%id%", id));
       return;
@@ -136,21 +138,14 @@ public class CommandButtonsCmd {
     new ButtonMenu(i, p, button).open(p);
   }
 
-  @Subcommand({"editor", "gui", "edit"})
+  @Subcommand({"editor", "edit"})
   @Description("Opens the GUI editor.")
-  @Usage("/cb editor [id]")
+  @Usage("cb editor [buttonId]")
   @CommandPermission("commandbuttons.editor")
-  public void runEditor(Player p, @Optional String id) {
-
-    if (id == null) {
-      new ButtonsListMenu(i, p).open(p);
-      return;
-    }
-
-    final CommandButton button = i.getButtonsManager().getButton(id);
+  public void runEditor(Player p, @Optional CommandButton button) {
 
     if (button == null) {
-      Text.tell(p, i.getMessages().getString("invalid-button"));
+      new ButtonsListMenu(i, p).open(p);
       return;
     }
 
@@ -159,21 +154,14 @@ public class CommandButtonsCmd {
 
   @Subcommand("addlocation")
   @Description("Adds a new location to the command button.")
-  @Usage("/cb addLocation <id>")
+  @Usage("cb addLocation <buttonId>")
   @CommandPermission("commandbuttons.editor")
-  public void runAddLocation(Player p, String id) {
+  public void runAddLocation(Player p, CommandButton button) {
 
     final Block targetBlock = p.getTargetBlock(null, 5);
 
     if (Utils.isAir(targetBlock)) {
       Text.tell(p, i.getMessages().getString("no-target-block"));
-      return;
-    }
-
-    final CommandButton button = i.getButtonsManager().getButton(id);
-
-    if (button == null) {
-      Text.tell(p, i.getMessages().getString("invalid-button"));
       return;
     }
 
@@ -187,26 +175,19 @@ public class CommandButtonsCmd {
     i.getButtonsManager().saveButton(button);
 
     Text.tell(p, Objects.requireNonNull(i.getMessages().getString("location-added"))
-        .replace("%id%", id));
+        .replace("%id%", button.getId()));
   }
 
   @Subcommand("removelocation")
   @Description("Removes a location from the command button.")
-  @Usage("/cb removeLocation <id>")
+  @Usage("cb removeLocation <buttonId>")
   @CommandPermission("commandbuttons.editor")
-  public void runRemoveLocation(Player p, String id) {
+  public void runRemoveLocation(Player p, CommandButton button) {
 
     final Block targetBlock = p.getTargetBlock(null, 5);
 
     if (Utils.isAir(targetBlock)) {
       Text.tell(p, i.getMessages().getString("no-target-block"));
-      return;
-    }
-
-    final CommandButton button = i.getButtonsManager().getButton(id);
-
-    if (button == null) {
-      Text.tell(p, i.getMessages().getString("invalid-button"));
       return;
     }
 
@@ -228,11 +209,11 @@ public class CommandButtonsCmd {
     if (removed) {
       i.getButtonsManager().saveButton(button);
       Text.tell(p, Objects.requireNonNull(i.getMessages().getString("location-removed"))
-          .replace("%id%", id));
+          .replace("%id%", button.getId()));
       return;
     }
 
     Text.tell(p, Objects.requireNonNull(i.getMessages().getString("location-not-exists"))
-        .replace("%id%", id));
+        .replace("%id%", button.getId()));
   }
 }
