@@ -24,9 +24,11 @@
 
 package dev.demeng.commandbuttons;
 
-import dev.demeng.commandbuttons.commands.CommandButtonsCmd;
+import dev.demeng.commandbuttons.command.CommandButtonsCmd;
+import dev.demeng.commandbuttons.command.param.ButtonParameterType;
 import dev.demeng.commandbuttons.listeners.ButtonListener;
 import dev.demeng.commandbuttons.manager.ButtonsManager;
+import dev.demeng.commandbuttons.model.CommandButton;
 import dev.demeng.pluginbase.BaseSettings;
 import dev.demeng.pluginbase.Common;
 import dev.demeng.pluginbase.Schedulers;
@@ -101,7 +103,10 @@ public final class CommandButtons extends BasePlugin {
     }
 
     getLogger().info("Registering commands...");
-    final Lamp<BukkitCommandActor> lamp = createCommandHandler();
+    final Lamp<BukkitCommandActor> lamp = createCommandHandler()
+        .parameterTypes(
+            builder -> builder.addParameterType(CommandButton.class, new ButtonParameterType(this)))
+        .build();
     lamp.register(new CommandButtonsCmd(this));
 
     getLogger().info("Registering listeners...");

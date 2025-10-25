@@ -84,7 +84,7 @@ public class ButtonsListMenu extends PagedMenu {
 
     final List<MenuButton> buttons = new ArrayList<>();
 
-    for (CommandButton button : i.getButtonsManager().getButtons()) {
+    for (CommandButton button : i.getButtonsManager().getButtons().values()) {
 
       // The material of the block at the first non-air location, or a barrier is not applicable.
       ItemStack stack = new ItemStack(Material.BARRIER);

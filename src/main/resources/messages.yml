@@ -15,9 +15,6 @@ config-version: 4
 # The prefix that will be displayed in front of most messages.
 prefix: "&8[&4&lCB&8] &r"
 
-# If the command sender does not provide a valid command button ID.
-invalid-button: "&cThere are no command buttons with that ID."
-
 # When the list of commands are requested.
 help:
   - ""

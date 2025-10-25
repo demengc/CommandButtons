@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package dev.demeng.commandbuttons.commands;
+package dev.demeng.commandbuttons.command;
 
 import dev.demeng.commandbuttons.CommandButtons;
 import dev.demeng.commandbuttons.menus.ButtonMenu;
@@ -98,7 +98,7 @@ public class CommandButtonsCmd {
 
   @Subcommand("create")
   @Description("Creates a new command button.")
-  @Usage("cb create <id>")
+  @Usage("cb create <buttonId>")
   @CommandPermission("commandbuttons.create")
   public void runCreate(Player p, String id) {
 
@@ -109,7 +109,7 @@ public class CommandButtonsCmd {
       return;
     }
 
-    if (i.getButtonsManager().getButton(id) != null) {
+    if (i.getButtonsManager().getButton(id).isPresent()) {
       Text.tell(p, Objects.requireNonNull(
           i.getMessages().getString("id-already-exists")).replace("%id%", id));
       return;
@@ -140,19 +140,12 @@ public class CommandButtonsCmd {
 
   @Subcommand({"editor", "edit"})
   @Description("Opens the GUI editor.")
-  @Usage("cb editor [id]")
+  @Usage("cb editor [buttonId]")
   @CommandPermission("commandbuttons.editor")
-  public void runEditor(Player p, @Optional String id) {
-
-    if (id == null) {
-      new ButtonsListMenu(i, p).open(p);
-      return;
-    }
-
-    final CommandButton button = i.getButtonsManager().getButton(id);
+  public void runEditor(Player p, @Optional CommandButton button) {
 
     if (button == null) {
-      Text.tell(p, i.getMessages().getString("invalid-button"));
+      new ButtonsListMenu(i, p).open(p);
       return;
     }
 
@@ -161,21 +154,14 @@ public class CommandButtonsCmd {
 
   @Subcommand("addlocation")
   @Description("Adds a new location to the command button.")
-  @Usage("cb addLocation <id>")
+  @Usage("cb addLocation <buttonId>")
   @CommandPermission("commandbuttons.editor")
-  public void runAddLocation(Player p, String id) {
+  public void runAddLocation(Player p, CommandButton button) {
 
     final Block targetBlock = p.getTargetBlock(null, 5);
 
     if (Utils.isAir(targetBlock)) {
       Text.tell(p, i.getMessages().getString("no-target-block"));
-      return;
-    }
-
-    final CommandButton button = i.getButtonsManager().getButton(id);
-
-    if (button == null) {
-      Text.tell(p, i.getMessages().getString("invalid-button"));
       return;
     }
 
@@ -189,26 +175,19 @@ public class CommandButtonsCmd {
     i.getButtonsManager().saveButton(button);
 
     Text.tell(p, Objects.requireNonNull(i.getMessages().getString("location-added"))
-        .replace("%id%", id));
+        .replace("%id%", button.getId()));
   }
 
   @Subcommand("removelocation")
   @Description("Removes a location from the command button.")
-  @Usage("cb removeLocation <id>")
+  @Usage("cb removeLocation <buttonId>")
   @CommandPermission("commandbuttons.editor")
-  public void runRemoveLocation(Player p, String id) {
+  public void runRemoveLocation(Player p, CommandButton button) {
 
     final Block targetBlock = p.getTargetBlock(null, 5);
 
     if (Utils.isAir(targetBlock)) {
       Text.tell(p, i.getMessages().getString("no-target-block"));
-      return;
-    }
-
-    final CommandButton button = i.getButtonsManager().getButton(id);
-
-    if (button == null) {
-      Text.tell(p, i.getMessages().getString("invalid-button"));
       return;
     }
 
@@ -230,11 +209,11 @@ public class CommandButtonsCmd {
     if (removed) {
       i.getButtonsManager().saveButton(button);
       Text.tell(p, Objects.requireNonNull(i.getMessages().getString("location-removed"))
-          .replace("%id%", id));
+          .replace("%id%", button.getId()));
       return;
     }
 
     Text.tell(p, Objects.requireNonNull(i.getMessages().getString("location-not-exists"))
-        .replace("%id%", id));
+        .replace("%id%", button.getId()));
   }
 }
