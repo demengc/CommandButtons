@@ -65,7 +65,7 @@ public final class CommandButtons extends BasePlugin {
 
   // Versions of the corresponding configuration file.
   private static final int SETTINGS_VERSION = 1;
-  private static final int MESSAGES_VERSION = 4;
+  private static final int MESSAGES_VERSION = 5;
   private static final int DATA_VERSION = 2;
 
   @Getter private ButtonsManager buttonsManager;

@@ -10,7 +10,7 @@
 # Support: https://demeng.dev/discord
 # -----------------------------------------------------------------------------
 
-config-version: 4
+config-version: 5
 
 # The prefix that will be displayed in front of most messages.
 prefix: "&8[&4&lCB&8] &r"
@@ -53,6 +53,10 @@ cooldown-active: "&cThis button is on cooldown! Please wait &e%remaining%&c."
 # If the player does not have enough money to use the command button.
 # %cost% - The cost of the button
 insufficient-funds: "&cYou need &e$%cost% &cto do that!"
+
+# If the player does not have permission to use the command button.
+# %permission% - The required permission
+no-permission: "&cYou do not have permission to use this button! Required: &e%permission%"
 
 # When a player adds a location to a command button.
 # %id% - The ID of the button
