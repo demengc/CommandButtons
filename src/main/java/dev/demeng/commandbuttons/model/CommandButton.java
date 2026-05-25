@@ -193,7 +193,7 @@ public class CommandButton {
     }
 
     for (String msg : messages) {
-      Text.coloredTell(p, msg.replace("%player%", p.getName()));
+      Text.tellRaw(p, msg.replace("%player%", p.getName()));
     }
 
     return true;

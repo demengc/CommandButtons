@@ -61,18 +61,18 @@ public class CommandButtonsCmd {
   @Subcommand("info")
   @Description("Displays information for CommandButtons.")
   public void runDefault(CommandSender sender) {
-    Text.coloredTell(sender, "");
-    Text.coloredTell(sender, "&c&lCommandButtons &fv" + Common.getVersion() + " &7by Demeng");
-    Text.coloredTell(sender, "&8> &7Use &f/cb help &7for a list of commands");
-    Text.coloredTell(sender, "&8> &7Link: &fhttps://spigotmc.org/resources/60991/");
-    Text.coloredTell(sender, "");
+    Text.tellRaw(sender, "");
+    Text.tellRaw(sender, "&c&lCommandButtons &fv" + Common.getVersion() + " &7by Demeng");
+    Text.tellRaw(sender, "&8> &7Use &f/cb help &7for a list of commands");
+    Text.tellRaw(sender, "&8> &7Link: &fhttps://spigotmc.org/resources/60991/");
+    Text.tellRaw(sender, "");
   }
 
   @Subcommand("help")
   @Description("Displays the list of commands.")
   public void runHelp(CommandSender sender) {
     for (String line : i.getMessages().getStringList("help")) {
-      Text.coloredTell(sender, line);
+      Text.tellRaw(sender, line);
     }
   }
 
